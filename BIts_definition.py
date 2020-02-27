@@ -29,3 +29,10 @@ def getSubstructSmi(mol,atomID,radius):
     smi = Chem.MolFragmentToSmiles(mol,atomsToUse,bondsToUse=env,allHsExplicit=True, allBondsExplicit=True, rootedAtAtom=atomID)
     smi2 = Chem.MolFragmentToSmiles(mol,atomsToUse,bondsToUse=env,atomSymbols=symbols, allBondsExplicit=True, rootedAtAtom=atomID)
     return smi,smi2
+
+#example
+info_bz=[]
+for bitId,atoms in misa_bi_H.items():
+    exampleAtom,exampleRadius = atoms[0]
+    description = getSubstructSmi(misakinolide_H,exampleAtom,exampleRadius)
+    info_bz.append((bitId,exampleRadius,description[0],description[1]))
