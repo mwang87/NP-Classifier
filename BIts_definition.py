@@ -1,3 +1,10 @@
+import numpy
+from rdkit.Chem.Draw import IPythonConsole
+from rdkit import Chem
+from rdkit.Chem import AllChem
+from rdkit import DataStructs
+from rdkit import rdBase
+
 def getSubstructSmi(mol,atomID,radius):
     if radius>0:
         env = Chem.FindAtomEnvironmentOfRadiusN(mol,radius,atomID)
