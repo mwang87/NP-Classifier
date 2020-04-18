@@ -6,11 +6,9 @@ import numpy as np
 class FP:
     'Generates morgan fingerprint with RDkit'
     def __init__(self, radius=2, bits=2048):# total length is (radius+1) * bits
-        
         self.radius = radius
         self.bit = bits
-        
-        
+               
     def get_binary(self,SMILES):
         
         binary = np.zeros((2048*(self.radius+1)), int)
