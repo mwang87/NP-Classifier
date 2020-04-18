@@ -9,10 +9,10 @@ class SM_Chem():
         self.radius = radius
         self.bit = bits
                
-    def get_binary(self,SMILES):
+    def get_binary(self,smiles):
         
         binary = np.zeros((2048*(self.radius+1)), int)
-        mol = Chem.MolFromSmiles(SMILES)
+        mol = Chem.MolFromSmiles(smiles)
         mol_H = Chem.AddHs(mol)
         mol_bi_H = {}
         for r in range(self.radius+1):
@@ -34,10 +34,10 @@ class SM_Chem():
                 binary[(2048*r)+i] = 1
         return binary
     
-    def smiles_aug(self,SMILES):
+    def smiles_aug(self,smiles):
         try: #sometimes, RDkit can't handle some type of SMILES randomly.
-            smiles_v = Chem.MolToSmiles(Chem.MolFromSmiles(SMILES),isomericSmiles=False, doRandom = True)
+            smiles_v = Chem.MolToSmiles(Chem.MolFromSmiles(smiles),isomericSmiles=False, doRandom = True)
         except:
-            smiles_v = SMILES
+            smiles_v = smiles
         return smiles_v
             
