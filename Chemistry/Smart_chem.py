@@ -3,7 +3,7 @@ from rdkit.Chem.Draw import IPythonConsole
 from rdkit.Chem import rdMolDescriptors
 import numpy as np
 
-class SMILES():
+class SM_Chem():
     'Generates morgan fingerprint with RDkit'
     def __init__(self, radius=2, bits=2048):# total length is (radius+1) * bits
         self.radius = radius
