@@ -3,7 +3,7 @@ from rdkit.Chem.Draw import IPythonConsole
 from rdkit.Chem import rdMolDescriptors
 import numpy as np
 
-class FP:
+class SMILES():
     'Generates morgan fingerprint with RDkit'
     def __init__(self, radius=2, bits=2048):# total length is (radius+1) * bits
         self.radius = radius
@@ -33,3 +33,11 @@ class FP:
             for i in bits:
                 binary[(2048*r)+i] = 1
         return binary
+    
+    def smiles_aug(self,SMILES):
+        try: #sometimes, RDkit can't handle some type of SMILES randomly.
+            smiles_v = Chem.MolToSmiles(Chem.MolFromSmiles(SMILES),isomericSmiles=False, doRandom = True)
+        except:
+            smiles_v = SMILES
+        return smiles_v
+            
