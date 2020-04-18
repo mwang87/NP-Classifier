@@ -8,7 +8,7 @@ class FP:
     def __init__(self, radius=2, bits=2048):# total length is (radius+1) * bits
         
         self.radius = radius
-        self.bit = bit
+        self.bit = bits
         
         
     def get_binary(self,SMILES):
