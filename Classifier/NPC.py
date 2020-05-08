@@ -23,15 +23,15 @@ def isNaN(num):
     return num != num
   
 import pickle
-with open('Important_DB/Final_Dataset/char2idx_super.pkl','rb') as char2idx_super:
+with open('dict/char2idx_super.pkl','rb') as char2idx_super:
     super_class = pickle.load(char2idx_super)
-with open('Important_DB/Final_Dataset/char2idx_sub.pkl','rb') as char2idx_sub:
+with open('dict/char2idx_sub.pkl','rb') as char2idx_sub:
     sub_class = pickle.load(char2idx_sub)
-with open('Important_DB/Final_Dataset/char2idx_sub_terpene.pkl','rb') as char2idx_sub_terpene:
+with open('dict/char2idx_sub_terpene.pkl','rb') as char2idx_sub_terpene:
     sub_class_terpene = pickle.load(char2idx_sub_terpene)
-with open('Important_DB/Final_Dataset/0507_DNP_class_subclass_set.pkl','rb') as classess:
+with open('dict/0507_DNP_class_subclass_set.pkl','rb') as classess:
     classes = pickle.load(classess)
-with open('Important_DB/Final_Dataset/0507_DNP_class_subclass_set_terpene.pkl','rb') as classess_terpene:
+with open('dict/0507_DNP_class_subclass_set_terpene.pkl','rb') as classess_terpene:
     classes_terpene = pickle.load(classess_terpene)
 
 # This part may take memory leakage
