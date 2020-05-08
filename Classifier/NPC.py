@@ -57,6 +57,32 @@ Triterpenoids_model = keras.models.load_model('Final_model/FP to Classifier/Ligh
 Sesquiterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/Light_0507_DNP_based_sub_classifier_Terpenoids_Sesquiterpenoids.hdf5')
 Diterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/Light_0507_DNP_based_sub_classifier_Terpenoids_Diterpenoids.hdf5')
 
+def HSQC_logical_r(SMILES,radi):
+    binary = np.zeros((2048*(radi+1)), int)
+    misakinolide = Chem.MolFromSmiles(SMILES)
+    misakinolide_H = Chem.AddHs(misakinolide)
+    misa_bi_H = {}
+    for r in range(radi+1):
+        misa_fp_H = rdMolDescriptors.GetMorganFingerprintAsBitVect(misakinolide_H, radius=r, bitInfo=misa_bi_H, nBits = 2048)
+        misa_bi_H_QC = []
+        for i in misa_fp_H.GetOnBits():
+            idx = misa_bi_H[i][0][0]
+            radius_list = []
+            for j in range(len(misa_bi_H[i])):
+                atom_radi = misa_bi_H[i][j][1]
+                radius_list.append(atom_radi) 
+            atom = misakinolide_H.GetAtomWithIdx(idx)
+            symbol = atom.GetSymbol()
+            neigbor = [x.GetAtomicNum() for x in atom.GetNeighbors()]
+            if r in radius_list: #and symbol == 'C' and 1 in neigbor:#radius = 2, atom = Carbon, H possessed Carbon
+                misa_bi_H_QC.append(i)
+        bits = misa_bi_H_QC
+        for i in bits:
+            binary[(2048*r)+i] = 1
+            
+    logit = np.where(binary==1)[0]
+    return binary,logit
+
 def classifier(smiles):
     super_list = []
     sub_list = []
