@@ -23,6 +23,7 @@ def isNaN(num):
     return num != num
   
 import pickle
+#Loading dictionary of super_class, class and subclass(terpene)
 with open('dict/char2idx_super.pkl','rb') as char2idx_super:
     super_class = pickle.load(char2idx_super)
 with open('dict/char2idx_sub.pkl','rb') as char2idx_sub:
