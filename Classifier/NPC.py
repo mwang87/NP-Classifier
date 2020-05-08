@@ -35,7 +35,7 @@ with open('Important_DB/Final_Dataset/0507_DNP_class_subclass_set_terpene.pkl','
     classes_terpene = pickle.load(classess_terpene)
 
 # This part may take memory leakage
-super_model = keras.models.load_model('Final_model/FP to Classifier/(0426)DNP_based_super_classifier_final.hdf5')
+Super_model = keras.models.load_model('Final_model/FP to Classifier/(0426)DNP_based_super_classifier_final.hdf5')
 Lignans_model = keras.models.load_model('Final_model/FP to Classifier/Light_0507_DNP_based_sub_classifier_Lignans.hdf5')
 Benzofuranoids_model = keras.models.load_model('Final_model/FP to Classifier/Light_0507_DNP_based_sub_classifier_Benzofuranoids.hdf5')
 Steroids_and_Sterols_model = keras.models.load_model('Final_model/FP to Classifier/Light_0507_DNP_based_sub_classifier_Steroids and Sterols.hdf5')
@@ -64,7 +64,7 @@ def classifier(smiles):
     try:
         
         fp = HSQC_logical_r(smiles,2)[0]
-        n = np.where(super_model.predict(fp.reshape(1,6144))[0]>=0.5)[0]
+        n = np.where(Super_model.predict(fp.reshape(1,6144))[0]>=0.5)[0]
         
             
         for j in n:
