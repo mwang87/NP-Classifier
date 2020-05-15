@@ -24,16 +24,18 @@ def isNaN(num):
   
 import pickle
 #Loading dictionary of super_class, class and subclass(terpene)
-with open('dict/char2idx_super.pkl','rb') as char2idx_super:
+
+with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_char2idx_super.pkl','rb') as char2idx_super:
     super_class = pickle.load(char2idx_super)
-with open('dict/char2idx_sub.pkl','rb') as char2idx_sub:
+with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_char2idx_sub.pkl','rb') as char2idx_sub:
     sub_class = pickle.load(char2idx_sub)
-with open('dict/char2idx_sub_terpene.pkl','rb') as char2idx_sub_terpene:
-    sub_class_terpene = pickle.load(char2idx_sub_terpene)
-with open('dict/0507_DNP_class_subclass_set.pkl','rb') as classess:
+with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_DNP_class_subclass_set.pkl','rb') as classess:
     classes = pickle.load(classess)
-with open('dict/0507_DNP_class_subclass_set_terpene.pkl','rb') as classess_terpene:
-    classes_terpene = pickle.load(classess_terpene)
+with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0513_char2idx_sub_terpene.pkl','rb') as char2idx_sub:
+    sub_class_terpene = pickle.load(char2idx_sub)    
+with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0513_DNP_class_subclass_set_terpene.pkl','rb') as classess:
+    classes_terpene = pickle.load(classess)
+
 
 # This part may take memory leakage
 Super_model = keras.models.load_model('Final_model/FP to Classifier/(0426)DNP_based_super_classifier_final.hdf5')
