@@ -67,7 +67,7 @@ Meroterpenoids_model = keras.models.load_model('Final_model/FP to Classifier/051
 
 #Fingerprint generation
 #(@ming if we want to use inchi as an input, inchi should be changed to SMILES and the SMILES should be standardized)
-def HSQC_logical_r(SMILES,radi):
+def HSQC_binary_r(SMILES,radi):
     binary = np.zeros((2048*(radi+1)), int)
     misakinolide = Chem.MolFromSmiles(SMILES)
     misakinolide_H = Chem.AddHs(misakinolide)
