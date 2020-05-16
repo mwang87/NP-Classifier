@@ -63,7 +63,7 @@ Sesquiterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DN
 Diterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Diterpenoids_Light.hdf5')
 Monoterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Monoterpenoids_Light.hdf5')
 Sesterterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Sesterterpenoids_Light.hdf5')
-Meroterpenoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Meroterpenoids_Light.hdf5')
+#Meroterpenoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Meroterpenoids_Light.hdf5')
 
 #Fingerprint generation
 #(@ming if we want to use inchi as an input, inchi should be changed to SMILES and the SMILES should be standardized)
@@ -248,10 +248,10 @@ def classifier(smiles):
                             terpene_sub_list.append(classes_terpene['Monoterpenoids'][o])
                         #if terpene_sub_list == []:
                          #   terpene_sub_list = classes_terpene['Monoterpenoids'][np.argmax(Monoterpenoids_model.predict(fp.reshape(1,6144)))]+'*'
-                    elif n == 'Meroterpenoids':
-                        subs_terpene = np.where(Meroterpenoids_model.predict(fp)[0]>=0.5)[0]
-                        for o in subs_terpene:
-                            terpene_sub_list.append(classes_terpene['Meroterpenoids'][o])
+                    #elif n == 'Meroterpenoids':
+                        #subs_terpene = np.where(Meroterpenoids_model.predict(fp)[0]>=0.5)[0]
+                        #for o in subs_terpene:
+                            #terpene_sub_list.append(classes_terpene['Meroterpenoids'][o])
                         #if terpene_sub_list == []:
                          #   terpene_sub_list = classes_terpene['Monoterpenoids'][np.argmax(Monoterpenoids_model.predict(fp.reshape(1,6144)))]+'*'
                             
