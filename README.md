@@ -1,4 +1,4 @@
-## GNPS Workflow URL Formatter
+## NP Classifier
 
 We typitcally will deploy this locally. To bring everything up
 
