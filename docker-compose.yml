@@ -1,0 +1,38 @@
+version: '3'
+services:
+  npclassifier-dash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: npclassifier-dash
+    volumes:
+      - ./output:/app/output:rw
+      - ./logs:/app/logs:rw
+    ports:
+    - "6541:5000"
+    networks:
+      - default
+      - nginx-net
+    environment:
+      VIRTUAL_HOST: npclassifier.ucsd.edu
+      VIRTUAL_PORT: 6558
+      LETSENCRYPT_HOST: npclassifier.ucsd.edu
+      LETSENCRYPT_EMAIL: miw023@ucsd.edu
+    restart: on-failure
+    command: /app/run_server.sh
+  
+  npclassifier-tf-server:
+    image: tensorflow/serving
+    volumes:
+        - ./Classifer/models_folder/models:/models
+        - ./Classifer/models_folder/models.config:/models/models.config
+    restart: on-failure
+    networks:
+      - default
+    environment:
+      model_config_file: /models/models.config
+
+networks:
+  nginx-net:
+    external:
+      name: nginx-net

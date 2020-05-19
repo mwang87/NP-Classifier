@@ -21,94 +21,61 @@ os.environ["CUDA_VISIBLE_DEVICES"]="-1" #for cpu environment
 
 def isNaN(num):
     return num != num
-  
+
 import pickle
 #Loading dictionary of super_class, class and subclass(terpene)
 
-with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_char2idx_super.pkl','rb') as char2idx_super:
-    super_class = pickle.load(char2idx_super)
-with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_char2idx_sub.pkl','rb') as char2idx_sub:
-    sub_class = pickle.load(char2idx_sub)
-with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_DNP_class_subclass_set.pkl','rb') as classess:
-    classes = pickle.load(classess)
-with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0513_char2idx_sub_terpene.pkl','rb') as char2idx_sub:
-    sub_class_terpene = pickle.load(char2idx_sub)    
-with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0513_DNP_class_subclass_set_terpene.pkl','rb') as classess:
-    classes_terpene = pickle.load(classess)
+def main():
+    with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_char2idx_super.pkl','rb') as char2idx_super:
+        super_class = pickle.load(char2idx_super)
+    with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_char2idx_sub.pkl','rb') as char2idx_sub:
+        sub_class = pickle.load(char2idx_sub)
+    with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0512_DNP_class_subclass_set.pkl','rb') as classess:
+        classes = pickle.load(classess)
+    with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0513_char2idx_sub_terpene.pkl','rb') as char2idx_sub:
+        sub_class_terpene = pickle.load(char2idx_sub)    
+    with open('D:/dropbox/ucsd/smart/cnn/ml/Important_DB/Final_Dataset/0513_DNP_class_subclass_set_terpene.pkl','rb') as classess:
+        classes_terpene = pickle.load(classess)
 
 
-# This part may take memory leakage
-#Super_class
-super_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_super_classifier_final_Light.hdf5')
-#Class
-Lignans_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Lignans_Light.hdf5')
-Benzofuranoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Benzofuranoids_Light.hdf5')
-Steroids_and_Sterols_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Steroids and Sterols_Light.hdf5')
-Aminoacids_and_peptides_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Aminoacids and peptides_Light.hdf5')
-Flavonoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Flavonoids_Light.hdf5')
-Aliphatic_natural_products_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Aliphatic natural products_Light.hdf5')
-Oxygenheterocycles_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Oxygenheterocycles_Light.hdf5')
-Benzopyranoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Benzopyranoids_Light.hdf5')
-Alkaloids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Alkaloids_Light.hdf5')
-Tannins_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Tannins_Light.hdf5')
-Simple_aromatic_natural_products_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Simple aromatic natural products_Light.hdf5')
-Polyketides_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Polyketides_Light.hdf5')
-Polypyrroles_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Polypyrroles_Light.hdf5')
-Carbohydrates_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Carbohydrates_Light.hdf5')
-Terpenoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Light.hdf5')
-Polycyclic_aromatic_natural_products_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Polycyclic aromatic natural products_Light.hdf5')
-#Terepenoid_subclass
-Triterpenoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Triterpenoids_Light.hdf5')
-Sesquiterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Sesquiterpenoids_Light.hdf5')
-Diterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Diterpenoids_Light.hdf5')
-Monoterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Monoterpenoids_Light.hdf5')
-Sesterterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Sesterterpenoids_Light.hdf5')
-#Meroterpenoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Meroterpenoids_Light.hdf5')
+    # This part may take memory leakage
+    #Super_class
+    super_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_super_classifier_final_Light.hdf5')
+    #Class
+    Lignans_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Lignans_Light.hdf5')
+    Benzofuranoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Benzofuranoids_Light.hdf5')
+    Steroids_and_Sterols_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Steroids and Sterols_Light.hdf5')
+    Aminoacids_and_peptides_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Aminoacids and peptides_Light.hdf5')
+    Flavonoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Flavonoids_Light.hdf5')
+    Aliphatic_natural_products_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Aliphatic natural products_Light.hdf5')
+    Oxygenheterocycles_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Oxygenheterocycles_Light.hdf5')
+    Benzopyranoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Benzopyranoids_Light.hdf5')
+    Alkaloids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Alkaloids_Light.hdf5')
+    Tannins_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Tannins_Light.hdf5')
+    Simple_aromatic_natural_products_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Simple aromatic natural products_Light.hdf5')
+    Polyketides_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Polyketides_Light.hdf5')
+    Polypyrroles_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Polypyrroles_Light.hdf5')
+    Carbohydrates_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Carbohydrates_Light.hdf5')
+    Terpenoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Light.hdf5')
+    Polycyclic_aromatic_natural_products_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Polycyclic aromatic natural products_Light.hdf5')
+    #Terepenoid_subclass
+    Triterpenoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Triterpenoids_Light.hdf5')
+    Sesquiterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Sesquiterpenoids_Light.hdf5')
+    Diterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Diterpenoids_Light.hdf5')
+    Monoterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Monoterpenoids_Light.hdf5')
+    Sesterterpenoids_model= keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Sesterterpenoids_Light.hdf5')
+    #Meroterpenoids_model = keras.models.load_model('Final_model/FP to Classifier/DNP_based_sub_classifier_Terpenoids_Meroterpenoids_Light.hdf5')
 
-#Fingerprint generation
-#(@ming if we want to use inchi as an input, inchi should be changed to SMILES and the SMILES should be standardized)
 
-def FP(SMILES,radi):
-    binary = np.zeros((2048*(radi)), int)
-    formula = np.zeros((2048),int)
-    misakinolide = Chem.MolFromSmiles(SMILES)
-    misakinolide_H = Chem.AddHs(misakinolide)
-    misa_bi_H = {}
-    for r in range(radi+1):
-        misa_fp_H = rdMolDescriptors.GetMorganFingerprintAsBitVect(misakinolide_H, radius=r, bitInfo=misa_bi_H, nBits = 2048)
-        misa_bi_H_QC = []
-        for i in misa_fp_H.GetOnBits():
-            idx = misa_bi_H[i][0][0]
-            radius_list = []
-            for j in range(len(misa_bi_H[i])):
-                atom_radi = misa_bi_H[i][j][1]
-                radius_list.append(atom_radi) 
-            atom = misakinolide_H.GetAtomWithIdx(idx)
-            symbol = atom.GetSymbol()
-            neigbor = [x.GetAtomicNum() for x in atom.GetNeighbors()]
-            if r in radius_list: #and symbol == 'C' and 1 in neigbor:#radius = 2, atom = Carbon, H possessed Carbon
-                misa_bi_H_QC.append(i)
-        bits = misa_bi_H_QC
-        for i in bits:
-            if r == 0:
-                formula[i] = len([k for k in misa_bi_H[i] if k[1]==r])
-            else:
-                binary[(2048*(r-1))+i] = 1
-    
-    
-    
-    return formula.reshape(1,2048),binary.reshape(1,4096)
 
 def classifier(smiles):
     super_list = []
     sub_list = []
     terpene_sub_list = []
     try:
-        
-        fp = FP(smiles,2)
+        fp = calculate_fingerprint(smiles,2)
         n = np.where(super_model.predict(fp)[0]>=0.5)[0]
         
-            
         for j in n:
             super_list.append([name for name, age in super_class.items() if age == j][0])
 
@@ -267,3 +234,5 @@ def classifier(smiles):
         pass
     
     return super_list,sub_list, terpene_sub_list
+
+
