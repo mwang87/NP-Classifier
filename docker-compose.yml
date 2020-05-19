@@ -24,13 +24,12 @@ services:
   npclassifier-tf-server:
     image: tensorflow/serving
     volumes:
-        - ./Classifer/models_folder/models:/models
-        - ./Classifer/models_folder/models.config:/models/models.config
+        - ./Classifier/models_folder/models:/models
+        - ./Classifier/models_folder/models.config:/models/models.config
     restart: on-failure
     networks:
       - default
-    environment:
-      model_config_file: /models/models.config
+    command: --model_config_file=/models/models.config
 
 networks:
   nginx-net:
