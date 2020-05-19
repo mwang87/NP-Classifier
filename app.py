@@ -9,7 +9,7 @@ from dash.dependencies import Input, Output
 import os
 from zipfile import ZipFile
 import urllib.parse
-from flask import Flask
+from flask import Flask, request
 import json
 import pandas as pd
 import requests
@@ -105,6 +105,14 @@ def classify_structure(smiles):
         all_classifications.append(classification)
 
     return all_classifications
+
+@server.route("/classify")
+def classify():
+    """Serve a file from the upload directory."""
+    smiles_string = request.values.get("smiles")
+    all_classifications = classify_structure(smiles_string)
+
+    return json.dumps(all_classifications)
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")
