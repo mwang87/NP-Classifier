@@ -46,7 +46,7 @@ DASHBOARD = [
     dbc.CardBody(
         [
             html.Div(id='version', children="Version - Release_1"),
-            dbc.Textarea(className="mb-3", id='smiles_string', placeholder="Enter full file paths for massive datasets (with or without ftp:// prefix)"),
+            dbc.Textarea(className="mb-3", id='smiles_string', placeholder="Smiles Structure"),
             
             dcc.Loading(
                 id="files_text_area",
