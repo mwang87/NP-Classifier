@@ -26,6 +26,9 @@ services:
     volumes:
         - ./Classifier/models_folder/models:/models
         - ./Classifier/models_folder/models.config:/models/models.config
+    ports:
+    - "8501:8501"
+    - "8500:8500"
     restart: on-failure
     networks:
       - default
