@@ -72,9 +72,9 @@ app.layout = html.Div(children=[NAVBAR, BODY])
     [Input('smiles_string', 'value')],
 )
 def handle_smiles(smiles_string):
-    fp = classify_structure(smiles_string)
+    all_classifications = classify_structure(smiles_string)
 
-    return [str(fp)]
+    return [smiles_string + ":" + str(all_classifications)]
 
 
 def classify_structure(smiles):
