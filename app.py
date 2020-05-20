@@ -90,7 +90,7 @@ def display_page(pathname):
     [Input('smiles_string', 'value')],
 )
 def handle_smiles(smiles_string):
-    all_classifications, fp1, fp2  = classify_structure(smiles_string)
+    all_classifications, classified_prediction, fp1, fp2  = classify_structure(smiles_string)
 
     # Creating Table
     white_list_columns = ["Super_class", "Class", "Sub_class"]
@@ -141,16 +141,17 @@ def classify_structure(smiles):
     for index in classification_indices:
         output_classification_list.append(ontology_dictionary[str(index)])
 
-    return output_classification_list, fp1, fp2
+    return output_classification_list, classified_prediction, fp1, fp2
 
 @server.route("/classify")
 def classify():
     """Serve a file from the upload directory."""
     smiles_string = request.values.get("smiles")
-    all_classifications, fp1, fp2 = classify_structure(smiles_string)
+    all_classifications, classified_prediction, fp1, fp2 = classify_structure(smiles_string)
 
     respond_dict = {}
     respond_dict["classifications"] = all_classifications
+    respond_dict["classified_prediction"] = classified_prediction
     respond_dict["fp1"] = fp1
     respond_dict["fp2"] = fp2
 
