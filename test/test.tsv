@@ -2,3 +2,4 @@ smiles	superclass	class	subclass
 CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O	Terpenoids	Monoterpenoids	Iridoid monoterpenoids
 C/C(=C\CCC1=CC(=O)OC1O)CC/C=C(\C)C(=O)O	Terpenoids	Sesquiterpenoids	Furanoid farnesane sesquiterpenoids
 C/C(C=O)=C\[C@]1(C)C(CCC(=O)O)=CCC[C@H]1C	Terpenoids	Sesquiterpenoids	Miscellaneous cyclohexane sesquiterpenoids
+CCC(C)C(=O)c1c(O)c(CC=C(C)C)c(O)c2c(C(O)CC)-cc(=O)oc12  Benzopyranoids  Coumarins Oxygenated coumarins
