@@ -143,7 +143,11 @@ def classify_structure(smiles):
 
     for index in classification_indices:
         output_classification_list.append(ontology_dictionary[str(index)])
-
+    
+    if output_classification_list == []:
+        index = np.argmax(classified_prediction[0])
+        output_classification_list.append(ontology_dictionary[str(index)]
+    
     return output_classification_list, classified_prediction.tolist()[0], fp1, fp2
 
 
