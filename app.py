@@ -14,6 +14,7 @@ import json
 import pandas as pd
 import requests
 import numpy as np
+import urllib.parse
 
 import sys
 sys.path.insert(0, "Classifier")
@@ -23,6 +24,7 @@ server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
+ontology_dictionary = json.loads(open("Classifier/dict/DNP_final_ontology_mapping.json").read())
 
 NAVBAR = dbc.Navbar(
     children=[
@@ -42,14 +44,19 @@ NAVBAR = dbc.Navbar(
 )
 
 DASHBOARD = [
+    dcc.Location(id='url', refresh=False),
     dbc.CardHeader(html.H5("NP Classifier")),
     dbc.CardBody(
         [
             html.Div(id='version', children="Version - Release_1"),
             dbc.Textarea(className="mb-3", id='smiles_string', placeholder="Smiles Structure"),
-            
             dcc.Loading(
-                id="files_text_area",
+                id="structure",
+                children=[html.Div([html.Div(id="loading-output-5")])],
+                type="default",
+            ),
+            dcc.Loading(
+                id="classification_table",
                 children=[html.Div([html.Div(id="loading-output-3")])],
                 type="default",
             )
@@ -66,45 +73,74 @@ BODY = dbc.Container(
 
 app.layout = html.Div(children=[NAVBAR, BODY])
 
+
+# This enables parsing the URL to shove a task into the qemistree id
+@app.callback(Output('smiles_string', 'value'),
+              [Input('url', 'pathname')])
+def display_page(pathname):
+    # Otherwise, lets use the url
+    if len(pathname) > 1:
+        return pathname[1:]
+    else:
+        return "CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O"
+
 # This function will rerun at any 
 @app.callback(
-    [Output('files_text_area', 'children')],
+    [Output('classification_table', 'children'), Output('structure', 'children')],
     [Input('smiles_string', 'value')],
 )
 def handle_smiles(smiles_string):
     all_classifications = classify_structure(smiles_string)
 
-    return [smiles_string + ":" + str(all_classifications)]
+    # Creating Table
+    white_list_columns = ["Super_class", "Class", "Sub_class"]
+    table_fig = dash_table.DataTable(
+        columns=[
+            {"name": i, "id": i, "deletable": False, "selectable": True} for i in white_list_columns
+        ],
+        data=all_classifications,
+        editable=False,
+        filter_action="native",
+        sort_action="native",
+        sort_mode="multi",
+        row_deletable=False,
+        selected_columns=[],
+        selected_rows=[],
+        page_action="native",
+        page_current= 0,
+        page_size= 10,
+    )
+
+    # Creating Structure Image
+    img_obj = html.Img(id='image', src="https://gnps-structure.ucsd.edu/structureimg?smiles={}".format(urllib.parse.quote(smiles_string)))
+
+    return [table_fig, img_obj]
+
 
 
 def classify_structure(smiles):
+    print(smiles, file=sys.stderr)
     fp = fingerprint_handler.calculate_fingerprint(smiles, 2)
 
     query_dict = {}
-    query_dict["input_1"] = fp[0].tolist()[0]
-    query_dict["input_2"] = fp[1].tolist()[0]
+    query_dict["input_5"] = fp[0].tolist()[0]
+    query_dict["input_6"] = fp[1].tolist()[0]
 
-    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/superclassifier:predict"
+    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/DNP_final:predict"
     payload = json.dumps({"instances": [ query_dict ]})
 
-    
     headers = {"content-type": "application/json"}
     json_response = requests.post(fp_pred_url, data=payload, headers=headers)
-    print(json_response.text)
 
     classified_prediction = np.asarray(json.loads(json_response.text)['predictions'])
     classification_indices = np.where(classified_prediction[0] >= 0.5)[0]
 
-    import pickle
-    with open('Classifier/dict/0512_char2idx_super.pkl','rb') as char2idx_super:
-        super_class = pickle.load(char2idx_super)
-    
-    all_classifications = []
-    for XXX in classification_indices:
-        classification = [name for name, age in super_class.items() if age == XXX][0]
-        all_classifications.append(classification)
+    output_classification_list = []
 
-    return all_classifications
+    for index in classification_indices:
+        output_classification_list.append(ontology_dictionary[str(index)])
+
+    return output_classification_list
 
 @server.route("/classify")
 def classify():
@@ -113,6 +149,11 @@ def classify():
     all_classifications = classify_structure(smiles_string)
 
     return json.dumps(all_classifications)
+
+@server.route("/model/metadata")
+def metadata():
+    """Serve a file from the upload directory."""
+    return requests.get("http://npclassifier-tf-server:8501/v1/models/DNP_final/metadata").text
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")

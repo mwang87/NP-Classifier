@@ -11,11 +11,15 @@ from rdkit import DataStructs
 
 #Fingerprint generation
 #(@ming if we want to use inchi as an input, inchi should be changed to SMILES and the SMILES should be standardized)
-def calculate_fingerprint(SMILES, radi):
+def calculate_fingerprint(smiles, radi):
     binary = np.zeros((2048*(radi)), int)
-    formula = np.zeros((2048),int)
-    mol = Chem.MolFromSmiles(smiles,sanitize=False)
-    mol = Chem.AddHs(mol,explicitOnly=True,addCoords=True,onlyOnAtoms=True)
+    formula = np.zeros((2048), int)
+
+    mol = Chem.MolFromSmiles(smiles)
+    #mol = Chem.MolFromSmiles(smiles, sanitize=False)
+    mol = Chem.AddHs(mol)
+    #mol = Chem.AddHs(mol, explicitOnly=True, addCoords=True, onlyOnAtoms=True)
+    
     mol_bi = {}
     for r in range(radi+1):
         mol_fp = rdMolDescriptors.GetMorganFingerprintAsBitVect(mol, radius=r, bitInfo=mol_bi, nBits = 2048)
@@ -28,7 +32,7 @@ def calculate_fingerprint(SMILES, radi):
                 if mol_bi[i][j][1] == r:
                     mol_bi_QC.append(i)
                     break
-                    
+
         if r == 0:
             for i in mol_bi_QC:
                 formula[i] = len([k for k in mol_bi[i] if k[1]==0])
@@ -36,4 +40,4 @@ def calculate_fingerprint(SMILES, radi):
             for i in mol_bi_QC:
                 binary[(2048*(r-1))+i] = 1
 
-    return formula.reshape(1,2048),binary.reshape(1,4096)
+    return formula.reshape(1,2048), binary.reshape(1,4096)
