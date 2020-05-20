@@ -90,7 +90,7 @@ def display_page(pathname):
     [Input('smiles_string', 'value')],
 )
 def handle_smiles(smiles_string):
-    all_classifications = classify_structure(smiles_string)
+    all_classifications, fp1, fp2  = classify_structure(smiles_string)
 
     # Creating Table
     white_list_columns = ["Super_class", "Class", "Sub_class"]
@@ -117,14 +117,15 @@ def handle_smiles(smiles_string):
     return [table_fig, img_obj]
 
 
-
 def classify_structure(smiles):
-    print(smiles, file=sys.stderr)
     fp = fingerprint_handler.calculate_fingerprint(smiles, 2)
 
+    fp1 = fp[0].tolist()[0]
+    fp2 = fp[1].tolist()[0]
+
     query_dict = {}
-    query_dict["input_5"] = fp[0].tolist()[0]
-    query_dict["input_6"] = fp[1].tolist()[0]
+    query_dict["input_5"] = fp1
+    query_dict["input_6"] = fp2
 
     fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/DNP_final:predict"
     payload = json.dumps({"instances": [ query_dict ]})
@@ -140,15 +141,20 @@ def classify_structure(smiles):
     for index in classification_indices:
         output_classification_list.append(ontology_dictionary[str(index)])
 
-    return output_classification_list
+    return output_classification_list, fp1, fp2
 
 @server.route("/classify")
 def classify():
     """Serve a file from the upload directory."""
     smiles_string = request.values.get("smiles")
-    all_classifications = classify_structure(smiles_string)
+    all_classifications, fp1, fp2 = classify_structure(smiles_string)
 
-    return json.dumps(all_classifications)
+    respond_dict = {}
+    respond_dict["classifications"] = all_classifications
+    respond_dict["fp1"] = fp1
+    respond_dict["fp2"] = fp2
+
+    return json.dumps(respond_dict)
 
 @server.route("/model/metadata")
 def metadata():
