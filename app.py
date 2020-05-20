@@ -24,6 +24,9 @@ server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
+from peewee import SqliteDatabase
+db = SqliteDatabase("/data/database.db", pragmas=[('journal_mode', 'wal')])
+
 ontology_dictionary = json.loads(open("Classifier/dict/DNP_final_ontology_mapping.json").read())
 
 NAVBAR = dbc.Navbar(
@@ -143,10 +146,20 @@ def classify_structure(smiles):
 
     return output_classification_list, classified_prediction.tolist()[0], fp1, fp2
 
+
+from models import ClassifyEntity
+
 @server.route("/classify")
 def classify():
-    """Serve a file from the upload directory."""
     smiles_string = request.values.get("smiles")
+
+    if "cached" in request.values:
+        try:
+            db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
+            return db_record.classification_json
+        except:
+            pass
+
     all_classifications, classified_prediction, fp1, fp2 = classify_structure(smiles_string)
 
     respond_dict = {}
@@ -154,6 +167,16 @@ def classify():
     respond_dict["classified_prediction"] = classified_prediction
     respond_dict["fp1"] = fp1
     respond_dict["fp2"] = fp2
+
+    # Lets save the result here, we should also check if its changed, and if so, we overwrite
+    try:
+        # Save it out
+        ClassifyEntity.create(
+                smiles=smiles_string,
+                classification_json=json.dumps(respond_dict)
+            )
+    except:
+        pass
 
     return json.dumps(respond_dict)
 

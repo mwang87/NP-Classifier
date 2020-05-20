@@ -5,8 +5,8 @@ import grequests
 import urllib.parse
 import datetime
 
-SERVER_URL = "http://dorresteintesthub.ucsd.edu:6541"
-#SERVER_URL = "http://mingwangbeta.ucsd.edu:6541"
+#SERVER_URL = "http://dorresteintesthub.ucsd.edu:6541"
+SERVER_URL = "http://mingwangbeta.ucsd.edu:6541"
 
 def test():
     request_url = "{}/classify?smiles={}".format(SERVER_URL, "CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O")
@@ -24,7 +24,7 @@ def test_gnps():
     for entry in all_library:
         smiles = str(entry["COMPOUND_SMILES"])
         if len(smiles) > 5:
-            request_url = "{}/classify?smiles={}".format(SERVER_URL, urllib.parse.quote(smiles))
+            request_url = "{}/classify?smiles={}&cached".format(SERVER_URL, urllib.parse.quote(smiles))
             all_urls.append(request_url)
 
     # Lets get them in parallel now

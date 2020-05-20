@@ -8,6 +8,7 @@ services:
     volumes:
       - ./output:/app/output:rw
       - ./logs:/app/logs:rw
+      - ./data:/data:rw
     ports:
     - "6541:5000"
     networks:
