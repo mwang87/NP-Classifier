@@ -4,9 +4,9 @@ import requests
 import grequests
 import urllib.parse
 import datetime
+import os
 
-#SERVER_URL = "http://dorresteintesthub.ucsd.edu:6541"
-SERVER_URL = "http://mingwangbeta.ucsd.edu:6541"
+SERVER_URL = os.environ.get("SERVER_URL", "http://dorresteintesthub.ucsd.edu:6541")
 
 def test():
     request_url = "{}/classify?smiles={}".format(SERVER_URL, "CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O")
