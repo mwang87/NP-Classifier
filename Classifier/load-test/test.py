@@ -1,7 +1,9 @@
 
 from tqdm import tqdm
 import requests
+import grequests
 import urllib.parse
+import datetime
 
 def test():
     request_url = "http://dorresteintesthub.ucsd.edu:6541/classify?smiles={}".format("CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O")
@@ -15,8 +17,21 @@ def test_gnps():
 
     all_library = r.json()
 
-    for entry in tqdm(all_library):
+    all_urls = []
+    for entry in all_library:
         smiles = str(entry["COMPOUND_SMILES"])
         if len(smiles) > 5:
             request_url = "http://dorresteintesthub.ucsd.edu:6541/classify?smiles={}".format(urllib.parse.quote(smiles))
-            r = requests.get(request_url)
+            #request_url = "http://mingwangbeta.ucsd.edu:6541/classify?smiles={}".format(urllib.parse.quote(smiles))
+            all_urls.append(request_url)
+
+    # Lets get them in parallel now
+    a = datetime.datetime.now()
+
+    all_urls = all_urls[:2000]
+    rs = (grequests.get(u) for u in all_urls)
+    grequests.map(rs, size=50)
+
+    b = datetime.datetime.now()
+    seconds_elapsed = (b - a).total_seconds()
+    print("seconds_elapsed", seconds_elapsed)
