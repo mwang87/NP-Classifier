@@ -14,28 +14,26 @@ from rdkit import DataStructs
 def calculate_fingerprint(SMILES, radi):
     binary = np.zeros((2048*(radi)), int)
     formula = np.zeros((2048),int)
-    misakinolide = Chem.MolFromSmiles(SMILES)
-    misakinolide_H = Chem.AddHs(misakinolide)
-    misa_bi_H = {}
+    mol = Chem.MolFromSmiles(smiles,sanitize=False)
+    mol = Chem.AddHs(mol,explicitOnly=True,addCoords=True,onlyOnAtoms=True)
+    mol_bi = {}
     for r in range(radi+1):
-        misa_fp_H = rdMolDescriptors.GetMorganFingerprintAsBitVect(misakinolide_H, radius=r, bitInfo=misa_bi_H, nBits = 2048)
-        misa_bi_H_QC = []
-        for i in misa_fp_H.GetOnBits():
-            idx = misa_bi_H[i][0][0]
+        mol_fp = rdMolDescriptors.GetMorganFingerprintAsBitVect(mol, radius=r, bitInfo=mol_bi, nBits = 2048)
+        mol_bi_QC = []
+        for i in mol_fp.GetOnBits():
+            idx = mol_bi[i][0][0]
             radius_list = []
-            for j in range(len(misa_bi_H[i])):
-                atom_radi = misa_bi_H[i][j][1]
-                radius_list.append(atom_radi) 
-            atom = misakinolide_H.GetAtomWithIdx(idx)
-            symbol = atom.GetSymbol()
-            neigbor = [x.GetAtomicNum() for x in atom.GetNeighbors()]
-            if r in radius_list: #and symbol == 'C' and 1 in neigbor:#radius = 2, atom = Carbon, H possessed Carbon
-                misa_bi_H_QC.append(i)
-        bits = misa_bi_H_QC
-        for i in bits:
-            if r == 0:
-                formula[i] = len([k for k in misa_bi_H[i] if k[1]==r])
-            else:
+            num_ = len(mol_bi[i])
+            for j in range(num_):
+                if mol_bi[i][j][1] == r:
+                    mol_bi_QC.append(i)
+                    break
+                    
+        if r == 0:
+            for i in mol_bi_QC:
+                formula[i] = len([k for k in mol_bi[i] if k[1]==0])
+        else:
+            for i in mol_bi_QC:
                 binary[(2048*(r-1))+i] = 1
 
     return formula.reshape(1,2048),binary.reshape(1,4096)
