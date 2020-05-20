@@ -12,6 +12,7 @@ def test():
         smiles = str(entry["smiles"])
         if len(smiles) > 5:
             request_url = "{}/classify?smiles={}".format(SERVER_URL, urllib.parse.quote(smiles))
+            print(request_url)
             r = requests.get(request_url)
             classification = r.json()
             print(classification)

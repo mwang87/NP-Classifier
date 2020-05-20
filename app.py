@@ -141,7 +141,7 @@ def classify_structure(smiles):
     for index in classification_indices:
         output_classification_list.append(ontology_dictionary[str(index)])
 
-    return output_classification_list, classified_prediction, fp1, fp2
+    return output_classification_list, classified_prediction.tolist()[0], fp1, fp2
 
 @server.route("/classify")
 def classify():
