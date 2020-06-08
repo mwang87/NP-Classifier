@@ -39,5 +39,7 @@ def calculate_fingerprint(smiles, radi):
         else:
             for i in mol_bi_QC:
                 binary[(2048*(r-1))+i] = 1
-
+    formula[1652] = 0 #removing the number of protons from fingerprint
+    
     return formula.reshape(1,2048), binary.reshape(1,4096)
+
