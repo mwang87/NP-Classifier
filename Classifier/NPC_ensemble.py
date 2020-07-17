@@ -133,8 +133,7 @@ def classifier(smiles):
 
 
                 else:
-                    n_class = [ o for o in n_class if set(path) & set(index['Class_hierarchy'][str(o)]['Pathway'])!=set() ]
-
+                    n_class = [ o for o in n_class if set(n_super) & set(index['Class_hierarchy'][str(o)]['Superclass'])!=set() ]
             else:
                 n_class = [ p for p in n_class if  set(path) & set(index['Class_hierarchy'][str(p)]['Pathway']) !=set() ]
                 n_super = [index['Class_hierarchy'][str(q)]['Superclass'] for q in n_class]
