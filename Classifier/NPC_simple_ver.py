@@ -48,7 +48,7 @@ def classifier(smiles):
     path_from_superclass = []
 
 
-    fp = FP(smiles,2)
+    fp = calculate_fingerprint(smiles,2)
     pred_class = model_class.predict(fp)[0]
     pred_super = model_super.predict(fp)[0]
     pred_path = model_pathway.predict(fp)[0]        
