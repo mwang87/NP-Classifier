@@ -118,15 +118,15 @@ def classifier(smiles):
                 if n_super == []:
                     n_class = [ m for m in n_class if set(path) & set(index['Class_hierarchy'][str(m)]['Pathway']) != set() ]
                     n_super = [index['Class_hierarchy'][str(n)]['Superclass'] for n in n_class]
-                    n_super = list(itertools.chain.from_iterable(n_super))
+                    n_super = list(set(itertools.chain.from_iterable(n_super)))
 
                 elif len(n_super) > 1: #super != []
                     n_class = [ u for u in n_class if set(path) & set(index['Class_hierarchy'][str(u)]['Pathway']) != set() ]
                     if n_class != []:
                         n_super = [index['Class_hierarchy'][str(v)]['Superclass'] for v in n_class]
                         n_path = [index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class]
-                        n_path = list(itertools.chain.from_iterable(n_path))
-                        n_super = list(itertools.chain.from_iterable(n_super))
+                        n_path = list(set(itertools.chain.from_iterable(n_path)))
+                        n_super = list(set(itertools.chain.from_iterable(n_super)))
 
                     elif len(path)==1:
                         n_super = [np.argmax(pred_super)]
@@ -141,7 +141,7 @@ def classifier(smiles):
                 n_class = [ p for p in n_class if  set(path) & set(index['Class_hierarchy'][str(p)]['Pathway']) !=set() ]
                 n_super = [index['Class_hierarchy'][str(q)]['Superclass'] for q in n_class]
 
-                n_super = list(itertools.chain.from_iterable(n_super))
+                n_super = list(set(itertools.chain.from_iterable(n_super)))
 
         else:
             n_super = [ l for l in n_super if set(path) & set(index['Super_hierarchy'][str(l)]['Pathway']) != set()]
@@ -149,24 +149,24 @@ def classifier(smiles):
                 n_class = [ m for m in n_class if set(path) & set(index['Class_hierarchy'][str(m)]['Pathway']) != set()]
                 n_super = [index['Class_hierarchy'][str(n)]['Superclass'] for n in n_class]
                 n_path = [index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class]
-                n_path = list(itertools.chain.from_iterable(n_path))
-                n_super = list(itertools.chain.from_iterable(n_super))
+                n_path = list(set(itertools.chain.from_iterable(n_path)))
+                n_super = list(set(itertools.chain.from_iterable(n_super)))
 
 
             elif len(n_super) > 1: #super != []
                 n_class = [ u for u in n_class if set(path) & set(index['Class_hierarchy'][str(u)]['Pathway']) != set()]
                 n_super = [index['Class_hierarchy'][str(v)]['Superclass'] for v in n_class]
                 n_path = [index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class]
-                n_path = list(itertools.chain.from_iterable(n_path))
-                n_super = list(itertools.chain.from_iterable(n_super))
+                n_path = list(set(itertools.chain.from_iterable(n_path)))
+                n_super = list(set(itertools.chain.from_iterable(n_super)))
 
 
             else:
                 n_class = [ o for o in n_class if set(path) & set(index['Class_hierarchy'][str(o)]['Pathway']) != set() ]
                 n_super = [index['Class_hierarchy'][str(v)]['Superclass'] for v in n_class]
                 n_path = [index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class]
-                n_path = list(itertools.chain.from_iterable(n_path))
-                n_super = list(itertools.chain.from_iterable(n_super))
+                n_path = list(set(itertools.chain.from_iterable(n_path)))
+                n_super = list(set(itertools.chain.from_iterable(n_super)))
 
     for r in path:
         pathway_result.append(index_pathway[r])
