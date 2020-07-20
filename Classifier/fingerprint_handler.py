@@ -28,7 +28,6 @@ def calculate_fingerprint(smiles, radi):
                     mol_bi_QC.append(i)
                     break
 
-       
         if r == 0:
             for i in mol_bi_QC:
                 formula[i] = len([k for k in mol_bi[i] if k[1]==0])
@@ -39,3 +38,16 @@ def calculate_fingerprint(smiles, radi):
     formula[1652] = 0 # Single proton is removed to make normalization easy
     
     return formula.reshape(1,2048),binary.reshape(1,4096)
+
+
+def _isglycoside(smiles): #now it is expressed as boolean but can be changed to any format
+    hexa_pyranose = Chem.MolFromSmarts('[O]C1C([O])C([O])C(C[O])OC1[*]')
+    penta_furanose = Chem.MolFromSmarts('[O]CC1OC([*])C([O])C1[O]')
+    mol = Chem.MolFromSmiles(smiles)
+    try:
+        if mol.HasSubstructMatch(hexa_pyranose) or mol.HasSubstructMatch(penta_furanose):
+            return True 
+        else:
+            return False 
+    except:
+        return 'Input_error'
