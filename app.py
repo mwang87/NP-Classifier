@@ -135,7 +135,7 @@ def handle_smiles(smiles_string):
     img_obj = html.Img(id='image', src="https://gnps-structure.ucsd.edu/structureimg?smiles={}".format(urllib.parse.quote(smiles_string)))
 
 
-    return [path_from_class, img_obj]
+    return [table_fig, img_obj]
 
 
 def classify_structure(smiles):
@@ -205,8 +205,7 @@ def classify_structure(smiles):
                                                                                                         isglycoside, 
                                                                                                         ontology_dictionary)
     
-    #return class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
-    return class_result, superclass_result, pathway_result, n_class, path_from_superclass, n_path, fp1, fp2
+    return class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
 
 # from models import ClassifyEntity
 
