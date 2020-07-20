@@ -91,7 +91,7 @@ def display_page(pathname):
     [Input('smiles_string', 'value')],
 )
 def handle_smiles(smiles_string):
-    class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
+    isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
 
     output_list = []
     for result in class_results:
@@ -110,6 +110,12 @@ def handle_smiles(smiles_string):
         output_dict = {}
         output_dict["entry"] = result
         output_dict["type"] = "pathway"
+        output_list.append(output_dict)
+
+    if isglycoside:
+        output_dict = {}
+        output_dict["entry"] = "glycoside"
+        output_dict["type"] = "glycoside"
         output_list.append(output_dict)
 
     #Creating Table
@@ -133,7 +139,6 @@ def handle_smiles(smiles_string):
 
     # Creating Structure Image
     img_obj = html.Img(id='image', src="https://gnps-structure.ucsd.edu/structureimg?smiles={}".format(urllib.parse.quote(smiles_string)))
-
 
     return [table_fig, img_obj]
 
@@ -205,7 +210,7 @@ def classify_structure(smiles):
                                                                                                         isglycoside, 
                                                                                                         ontology_dictionary)
     
-    return class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
+    return isglycoside, class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
 
 # from models import ClassifyEntity
 
