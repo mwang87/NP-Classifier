@@ -19,15 +19,13 @@ import urllib.parse
 import sys
 sys.path.insert(0, "Classifier")
 import fingerprint_handler
+import prediction_voting
 
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
-from peewee import SqliteDatabase
-db = SqliteDatabase("/data/database.db", pragmas=[('journal_mode', 'wal')])
-
-ontology_dictionary = json.loads(open("Classifier/dict/DNP_final_ontology_mapping.json").read())
+ontology_dictionary = json.loads(open("Classifier/dict/index_v25.json").read())
 
 NAVBAR = dbc.Navbar(
     children=[
@@ -93,15 +91,40 @@ def display_page(pathname):
     [Input('smiles_string', 'value')],
 )
 def handle_smiles(smiles_string):
-    all_classifications, classified_prediction, fp1, fp2  = classify_structure(smiles_string)
+    isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
 
-    # Creating Table
-    white_list_columns = ["Super_class", "Class", "Sub_class"]
+    output_list = []
+    for result in class_results:
+        output_dict = {}
+        output_dict["entry"] = result
+        output_dict["type"] = "class"
+        output_list.append(output_dict)
+
+    for result in superclass_results:
+        output_dict = {}
+        output_dict["entry"] = result
+        output_dict["type"] = "superclass"
+        output_list.append(output_dict)
+    
+    for result in pathway_results:
+        output_dict = {}
+        output_dict["entry"] = result
+        output_dict["type"] = "pathway"
+        output_list.append(output_dict)
+
+    if isglycoside:
+        output_dict = {}
+        output_dict["entry"] = "glycoside"
+        output_dict["type"] = "glycoside"
+        output_list.append(output_dict)
+
+    #Creating Table
+    white_list_columns = ["entry", "type"]
     table_fig = dash_table.DataTable(
         columns=[
             {"name": i, "id": i, "deletable": False, "selectable": True} for i in white_list_columns
         ],
-        data=all_classifications,
+        data=output_list,
         editable=False,
         filter_action="native",
         sort_action="native",
@@ -121,73 +144,113 @@ def handle_smiles(smiles_string):
 
 
 def classify_structure(smiles):
+    isglycoside = fingerprint_handler._isglycoside(smiles)
+
     fp = fingerprint_handler.calculate_fingerprint(smiles, 2)
 
     fp1 = fp[0].tolist()[0]
     fp2 = fp[1].tolist()[0]
 
     query_dict = {}
-    query_dict["input_5"] = fp1
-    query_dict["input_6"] = fp2
+    query_dict["input_1"] = fp1
+    query_dict["input_2"] = fp2
 
-    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/DNP_final:predict"
+    # Handling SUPERCLASS
+    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/SUPERCLASS:predict"
     payload = json.dumps({"instances": [ query_dict ]})
 
     headers = {"content-type": "application/json"}
     json_response = requests.post(fp_pred_url, data=payload, headers=headers)
 
-    classified_prediction = np.asarray(json.loads(json_response.text)['predictions'])
-    classification_indices = np.where(classified_prediction[0] >= 0.5)[0]
+    pred_super = np.asarray(json.loads(json_response.text)['predictions'])[0]
+    n_super = list(np.where(pred_super>=0.3)[0])
 
-    output_classification_list = []
+    path_from_superclass = []
+    for j in n_super:
+        path_from_superclass += ontology_dictionary['Super_hierarchy'][str(j)]['Pathway']
+    path_from_superclass = list(set(path_from_superclass))
 
-    for index in classification_indices:
-        output_classification_list.append(ontology_dictionary[str(index)])
+    # Handling CLASS
+    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/CLASS:predict"
+    payload = json.dumps({"instances": [ query_dict ]})
+
+    headers = {"content-type": "application/json"}
+    json_response = requests.post(fp_pred_url, data=payload, headers=headers)
+
+    pred_class = np.asarray(json.loads(json_response.text)['predictions'])[0]
+    n_class = list(np.where(pred_class>=0.1)[0])
+
+    path_from_class = []
+    for j in n_class:
+        path_from_class += ontology_dictionary['Class_hierarchy'][str(j)]['Pathway']
+    path_from_class = list(set(path_from_class))
+
+    # Handling PATHWAY
+    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/PATHWAY:predict"
+    payload = json.dumps({"instances": [ query_dict ]})
+
+    headers = {"content-type": "application/json"}
+    json_response = requests.post(fp_pred_url, data=payload, headers=headers)
+
+    pred_path = np.asarray(json.loads(json_response.text)['predictions'])[0]
+    n_path = list(np.where(pred_path>=0.5)[0])
+
+    class_result = []
+    superclass_result = []
+    pathway_result = []
+
+    # Voting on Answer
+    pathway_result, superclass_result, class_result, isglycoside = prediction_voting.vote_classification(n_path, 
+                                                                                                        n_class, 
+                                                                                                        n_super, 
+                                                                                                        pred_class,
+                                                                                                        pred_super, 
+                                                                                                        path_from_class, 
+                                                                                                        path_from_superclass, 
+                                                                                                        isglycoside, 
+                                                                                                        ontology_dictionary)
     
-    if output_classification_list == []:
-        index = np.argmax(classified_prediction[0])
-        output_classification_list.append(ontology_dictionary[str(index)])
-    
-    return output_classification_list, classified_prediction.tolist()[0], fp1, fp2
+    return isglycoside, class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
 
+# from models import ClassifyEntity
 
-from models import ClassifyEntity
+# @server.route("/classify")
+# def classify():
+#     smiles_string = request.values.get("smiles")
 
-@server.route("/classify")
-def classify():
-    smiles_string = request.values.get("smiles")
+#     if "cached" in request.values:
+#         try:
+#             db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
+#             return db_record.classification_json
+#         except:
+#             pass
 
-    if "cached" in request.values:
-        try:
-            db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
-            return db_record.classification_json
-        except:
-            pass
+#     class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
 
-    all_classifications, classified_prediction, fp1, fp2 = classify_structure(smiles_string)
+#     respond_dict = {}
+#     respond_dict["class_results"] = class_results
+#     respond_dict["superclass_results"] = superclass_results
+#     respond_dict["pathway_results"] = pathway_results
+#     respond_dict["fp1"] = fp1
+#     respond_dict["fp2"] = fp2
 
-    respond_dict = {}
-    respond_dict["classifications"] = all_classifications
-    respond_dict["classified_prediction"] = classified_prediction
-    respond_dict["fp1"] = fp1
-    respond_dict["fp2"] = fp2
+#     # Lets save the result here, we should also check if its changed, and if so, we overwrite
+#     try:
+#         # Save it out
+#         ClassifyEntity.create(
+#                 smiles=smiles_string,
+#                 classification_json=json.dumps(respond_dict)
+#             )
+#     except:
+#         pass
 
-    # Lets save the result here, we should also check if its changed, and if so, we overwrite
-    try:
-        # Save it out
-        ClassifyEntity.create(
-                smiles=smiles_string,
-                classification_json=json.dumps(respond_dict)
-            )
-    except:
-        pass
+#     return json.dumps(respond_dict)
 
-    return json.dumps(respond_dict)
-
+# This gets you the model metadata
 @server.route("/model/metadata")
 def metadata():
     """Serve a file from the upload directory."""
-    return requests.get("http://npclassifier-tf-server:8501/v1/models/DNP_final/metadata").text
+    return requests.get("http://npclassifier-tf-server:8501/v1/models/PATHWAY/metadata").text
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")
