@@ -52,7 +52,7 @@ import json
 #Loading dictionary of super_class, class and subclass(terpene)
 
 def main():
-    with open('dict/index_v24.json','r') as total:
+    with open('dict/index_v25.json','r') as total:
         index = json.load(total)
 
     index_class = list(index['Class'].keys())
@@ -61,9 +61,9 @@ def main():
 
     # This part may take memory leakage
     #Super_class
-    model_class = keras.models.load_model('model/NP_classifier_class_V24.hdf5')
-    model_super = keras.models.load_model('model/NP_classifier_superclass_V24.hdf5')
-    model_pathway = keras.models.load_model('model/NP_classifier_pathway_V24.hdf5')
+    model_class = keras.models.load_model('model/NP_classifier_class_V25.hdf5')
+    model_super = keras.models.load_model('model/NP_classifier_superclass_V25.hdf5')
+    model_pathway = keras.models.load_model('model/NP_classifier_pathway_V25.hdf5')
 
 def classifier(smiles):
     
