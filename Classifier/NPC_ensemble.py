@@ -130,13 +130,13 @@ def classifier(smiles):
 
                     elif len(path)==1:
                         n_super = [np.argmax(pred_super)]
-                        n_class = [ m for m in [np.argmax(pred_class)] if set(path) & set(index['Class_hierarchy'][str(m)]['Pathway']) != set() ]
+                        n_class = [ m for m in [np.argmax(pred_class)] if set(n_super) & set(index['Class_hierarchy'][str(m)]['Superclass']) != set() ]
 
 
                 else:
                     n_class = [ o for o in n_class if set(n_super) & set(index['Class_hierarchy'][str(o)]['Superclass'])!=set() ]
                     if n_class == []:
-                        n_class = [ m for m in [np.argmax(pred_class)] if set(path) & set(index['Class_hierarchy'][str(m)]['Pathway']) != set() ]
+                        n_class = [ m for m in [np.argmax(pred_class)] if set(n_super) & set(index['Class_hierarchy'][str(m)]['Superclass']) != set() ]
             else:
                 n_class = [ p for p in n_class if  set(path) & set(index['Class_hierarchy'][str(p)]['Pathway']) !=set() ]
                 n_super = [index['Class_hierarchy'][str(q)]['Superclass'] for q in n_class]
