@@ -25,6 +25,10 @@ server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
+
+from models import ClassifyEntity
+
+
 ontology_dictionary = json.loads(open("Classifier/dict/index_v25.json").read())
 
 NAVBAR = dbc.Navbar(
@@ -212,39 +216,40 @@ def classify_structure(smiles):
     
     return isglycoside, class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
 
-# from models import ClassifyEntity
 
-# @server.route("/classify")
-# def classify():
-#     smiles_string = request.values.get("smiles")
+@server.route("/classify")
+def classify():
+    smiles_string = request.values.get("smiles")
 
-#     if "cached" in request.values:
-#         try:
-#             db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
-#             return db_record.classification_json
-#         except:
-#             pass
+    if "cached" in request.values:
+        try:
+            db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
+            return db_record.classification_json
+        except:
+            pass
 
-#     class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
+    isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
 
-#     respond_dict = {}
-#     respond_dict["class_results"] = class_results
-#     respond_dict["superclass_results"] = superclass_results
-#     respond_dict["pathway_results"] = pathway_results
-#     respond_dict["fp1"] = fp1
-#     respond_dict["fp2"] = fp2
+    respond_dict = {}
+    respond_dict["class_results"] = class_results
+    respond_dict["superclass_results"] = superclass_results
+    respond_dict["pathway_results"] = pathway_results
+    respond_dict["isglycoside"] = isglycoside
+    
+    respond_dict["fp1"] = fp1
+    respond_dict["fp2"] = fp2
 
-#     # Lets save the result here, we should also check if its changed, and if so, we overwrite
-#     try:
-#         # Save it out
-#         ClassifyEntity.create(
-#                 smiles=smiles_string,
-#                 classification_json=json.dumps(respond_dict)
-#             )
-#     except:
-#         pass
+    # Lets save the result here, we should also check if its changed, and if so, we overwrite
+    try:
+        # Save it out
+        ClassifyEntity.create(
+                smiles=smiles_string,
+                classification_json=json.dumps(respond_dict)
+            )
+    except:
+        pass
 
-#     return json.dumps(respond_dict)
+    return json.dumps(respond_dict)
 
 # This gets you the model metadata
 @server.route("/model/metadata")

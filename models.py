@@ -2,7 +2,8 @@
 # models.py
 import datetime
 from peewee import *
-from app import db
+
+db = SqliteDatabase("/data/database.db", pragmas=[('journal_mode', 'wal')])
 
 class ClassifyEntity(Model):
     smiles = TextField(unique=True, index=True)
