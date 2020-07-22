@@ -12,7 +12,10 @@ def vote_classification(n_path,
     class_result = []
     superclass_result = []
     pathway_result = []
-
+    
+    if n_path == []:
+        n_path = [np.argmax(pred_path)]
+    
     index = ontology_dictionary
 
     index_class = list(index['Class'].keys())
@@ -28,6 +31,7 @@ def vote_classification(n_path,
             path_for_vote = n_path+path_from_superclass
             n_class = []
             path = list(set([ k for k in path_for_vote if path_for_vote.count(k) ==2])) 
+            
     if path == []:
         for w in n_path:
             pathway_result.append(index_pathway[w])
@@ -63,7 +67,6 @@ def vote_classification(n_path,
             else:
                 n_class = [ p for p in n_class if  set(path) & set(index['Class_hierarchy'][str(p)]['Pathway']) !=set() ]
                 n_super = [index['Class_hierarchy'][str(q)]['Superclass'] for q in n_class]
-
                 n_super = list(set(itertools.chain.from_iterable(n_super)))
 
         else:
