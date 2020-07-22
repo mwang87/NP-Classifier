@@ -87,7 +87,7 @@ def display_page(pathname):
     if len(pathname) > 1:
         return pathname[1:]
     else:
-        return "CCCC1C2=C(CCC3=C(C=CCC)C(=O)OC31O)C(=O)OC2=O" # result: ['Polyketides'], ['Cyclic polyketides'], ['Maleidrides']
+        return "CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O" # result: ['Polyketides'], ['Cyclic polyketides'], ['Maleidrides']
 
 # This function will rerun at any 
 @app.callback(
