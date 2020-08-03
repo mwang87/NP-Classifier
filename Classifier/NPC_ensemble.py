@@ -52,7 +52,7 @@ import json
 #Loading dictionary of super_class, class and subclass(terpene)
 
 def main():
-    with open('dict/index_v25.json','r') as total:
+    with open('dict/index_v1.json','r') as total:
         index = json.load(total)
 
     index_class = list(index['Class'].keys())

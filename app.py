@@ -29,7 +29,7 @@ server = app.server
 from models import ClassifyEntity
 
 
-ontology_dictionary = json.loads(open("Classifier/dict/index_v25.json").read())
+ontology_dictionary = json.loads(open("Classifier/dict/index_v1.json").read())
 
 NAVBAR = dbc.Navbar(
     children=[
@@ -53,7 +53,7 @@ DASHBOARD = [
     dbc.CardHeader(html.H5("NP Classifier")),
     dbc.CardBody(
         [
-            html.Div(id='version', children="Version - Release_1"),
+            html.Div(id='version', children="Version - 1.1"),
             dbc.Textarea(className="mb-3", id='smiles_string', placeholder="Smiles Structure"),
             dcc.Loading(
                 id="structure",
