@@ -11,5 +11,4 @@ What we need to do is convert keras hdf5 model to tensor flow model.
 1. Place model in appropriate folder also in versioned folder CLASS/000001
 1. Place model in appropriate folder also in versioned folder PATHWAY/000001
 
-
 Note: to get the model metadata, go to ```/model/metadata```
