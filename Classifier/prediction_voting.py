@@ -25,13 +25,11 @@ def vote_classification(n_path,
     if path == []:
         path = list(set([ k for k in path_for_vote if path_for_vote.count(k) ==2]))
         if len(path)>1:
-                path_for_vote = n_path+path_from_superclass
-                n_class = []
-                path = list(set([ k for k in path_for_vote if path_for_vote.count(k) ==2])) 
+            path = list(set([ k for k in path_for_vote if path_for_vote.count(k) ==2])) 
     if path == []:
         for w in n_path:
             pathway_result.append(index_pathway[w])
-            return pathway_result,superclass_result,class_result,isglycoside
+        return pathway_result,superclass_result,class_result,isglycoside
 
 
     else: #path != []
