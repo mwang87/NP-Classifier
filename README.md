@@ -21,3 +21,7 @@ You can also provide cached flag to the params to get the cached version so make
 ## License
 
 The license as included for the software is MIT. Additionally, all data, models, and ontology are licensed as [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/).
+
+## Privacy
+
+We try our best to balance privacy and understand how users are using our tool. As such, we keep in our logs which structures were classified but not which users queried the spectra. 
