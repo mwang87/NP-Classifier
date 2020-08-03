@@ -24,4 +24,4 @@ The license as included for the software is MIT. Additionally, all data, models,
 
 ## Privacy
 
-We try our best to balance privacy and understand how users are using our tool. As such, we keep in our logs which structures were classified but not which users queried the spectra. 
+We try our best to balance privacy and understand how users are using our tool. As such, we keep in our logs which structures were classified but not which users queried the structure. 
