@@ -1,4 +1,4 @@
-wget --output-document=models.zip "https://www.dropbox.com/sh/r5gsjyn70srxw8f/AABAVG5Bo3rAjyulXcBL4qtAa?dl=1"
+wget --output-document=models.zip "https://www.dropbox.com/sh/ie3nyy0gf7n2dfy/AABp-OnutWzEHr8LJMRYuYZ7a?dl=1"
 unzip models.zip
 mkdir -p CLASS/000001
 mkdir -p SUPERCLASS/000001
