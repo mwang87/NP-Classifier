@@ -174,6 +174,10 @@ def classify_structure(smiles):
         path_from_superclass += ontology_dictionary['Super_hierarchy'][str(j)]['Pathway']
     path_from_superclass = list(set(path_from_superclass))
 
+    query_dict = {}
+    query_dict["input_3"] = fp1
+    query_dict["input_4"] = fp2
+
     # Handling CLASS
     fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/CLASS:predict"
     payload = json.dumps({"instances": [ query_dict ]})
@@ -188,6 +192,10 @@ def classify_structure(smiles):
     for j in n_class:
         path_from_class += ontology_dictionary['Class_hierarchy'][str(j)]['Pathway']
     path_from_class = list(set(path_from_class))
+
+    query_dict = {}
+    query_dict["input_1"] = fp1
+    query_dict["input_2"] = fp2
 
     # Handling PATHWAY
     fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/PATHWAY:predict"
@@ -255,7 +263,16 @@ def classify():
 @server.route("/model/metadata")
 def metadata():
     """Serve a file from the upload directory."""
-    return requests.get("http://npclassifier-tf-server:8501/v1/models/PATHWAY/metadata").text
+    all_metadata = {}
+    pathway_metadata = json.loads(requests.get("http://npclassifier-tf-server:8501/v1/models/PATHWAY/metadata").text)
+    class_metadata = json.loads(requests.get("http://npclassifier-tf-server:8501/v1/models/CLASS/metadata").text)
+    superclass_metadata = json.loads(requests.get("http://npclassifier-tf-server:8501/v1/models/SUPERCLASS/metadata").text)
+
+    all_metadata["pathway"] = pathway_metadata
+    all_metadata["class"] = class_metadata
+    all_metadata["superclass"] = superclass_metadata
+
+    return json.dumps(all_metadata)
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")

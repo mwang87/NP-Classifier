@@ -23,7 +23,7 @@ services:
     command: /app/run_server.sh
   
   npclassifier-tf-server:
-    image: tensorflow/serving
+    image: tensorflow/serving:2.3.0
     volumes:
         - ./Classifier/models_folder/models:/models
         - ./Classifier/models_folder/models.config:/models/models.config
