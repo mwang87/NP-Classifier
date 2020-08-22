@@ -53,7 +53,7 @@ DASHBOARD = [
     dbc.CardHeader(html.H5("NP Classifier")),
     dbc.CardBody(
         [
-            html.Div(id='version', children="Version - 1.1"),
+            html.Div(id='version', children="Version - 1.2"),
             dbc.Textarea(className="mb-3", id='smiles_string', placeholder="Smiles Structure"),
             dcc.Loading(
                 id="structure",
