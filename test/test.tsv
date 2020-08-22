@@ -4,4 +4,6 @@ CC[C@H](C)/C=C/C1=CC2=CC(=O)[C@@]3([C@H](C2=CO1)[C@H]4C(=O)O[C@@H]([C@H]([C@]4(O
 CC(C)C=CCCCCC(=O)NCC1=CC(=C(C=C1)O)OC,Alkaloids,Pseudoalkaloids (transamidation),Capsaicins and Capsaicinoids;Phenylalanine-derived alkaloids
 C=C1CC[C@H](C/C=C(\C)CO[C@@H]2O[C@H](CO)[C@@H](O)[C@H](O)[C@H]2O)C(C)(C)[C@@H]1/C=C/C(C)=C/C=C/C(C)=C/C=C/C=C(C)/C=C/C=C(C)/C=C/[C@@H]1C(=C)CC[C@H](C/C=C(\C)CO[C@@H]2O[C@H](CO)[C@@H](O)[C@H](O)[C@H]2O)C1(C)C,Terpenoids
 , Carotenoids (C50), Carotenoids (C50, γ-γ)
+CCCCCCCCCCCCCCCC(=O)OCCCCCCCCCCCCCC, Fatty acids, Fatty esters, Wax monoesters
+CC/C=C\CC(=O)/C=C/C=C\C=C\C=C\[C@@H](O)[C@@H](O)C/C=C\CCC(=O)O, Fatty acids, Docosanoids, Resolvin Ds
 
