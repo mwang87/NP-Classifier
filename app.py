@@ -99,32 +99,35 @@ def handle_smiles(smiles_string):
     isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
 
     output_list = []
-    for result in class_results:
+
+    for result in pathway_results:
         output_dict = {}
+        output_dict["type"] = "pathway"
         output_dict["entry"] = result
-        output_dict["type"] = "class"
         output_list.append(output_dict)
+
 
     for result in superclass_results:
         output_dict = {}
-        output_dict["entry"] = result
         output_dict["type"] = "superclass"
-        output_list.append(output_dict)
-    
-    for result in pathway_results:
-        output_dict = {}
         output_dict["entry"] = result
-        output_dict["type"] = "pathway"
+        output_list.append(output_dict)
+
+
+    for result in class_results:
+        output_dict = {}
+        output_dict["type"] = "class"
+        output_dict["entry"] = result
         output_list.append(output_dict)
 
     if isglycoside:
         output_dict = {}
-        output_dict["entry"] = "glycoside"
         output_dict["type"] = "glycoside"
+        output_dict["entry"] = "glycoside"
         output_list.append(output_dict)
 
     #Creating Table
-    white_list_columns = ["entry", "type"]
+    white_list_columns = ["type", "entry"]
     table_fig = dash_table.DataTable(
         columns=[
             {"name": i, "id": i, "deletable": False, "selectable": True} for i in white_list_columns
