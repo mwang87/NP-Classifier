@@ -40,6 +40,7 @@ NAVBAR = dbc.Navbar(
         dbc.Nav(
             [
                 dbc.NavItem(dbc.NavLink("NP Classifier", href="#")),
+                dbc.NavItem(dbc.NavLink("Report Feedback", href="https://docs.google.com/forms/d/e/1FAIpQLSf1-sw-P0SQGokyeaOpEmLda0UPJW93qkrI8rfp7D46fHVi6g/viewform?usp=sf_link")),
             ],
         navbar=True)
     ],
