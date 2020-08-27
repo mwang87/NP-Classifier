@@ -1,7 +1,6 @@
 import pandas as pd
 import urllib.parse
 import requests
-from tqdm import tqdm
 
 
 SERVER_URL = "https://npclassifier.ucsd.edu/"
