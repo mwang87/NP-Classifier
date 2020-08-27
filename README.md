@@ -1,5 +1,7 @@
 ## NP Classifier
 
+![production-integration](https://github.com/mwang87/NP-Classifier/workflows/production-integration/badge.svg)
+
 We typitcally will deploy this locally. To bring everything up
 
 ```server-compose```
