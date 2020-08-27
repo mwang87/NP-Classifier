@@ -5,8 +5,8 @@ from tqdm import tqdm
 import grequests
 import time
 
-SERVER_URL = "http://localhost:6541"
-#SERVER_URL = "http://dorresteintesthub.ucsd.edu:6541"
+#SERVER_URL = "http://localhost:6541"
+SERVER_URL = "http://dorresteintesthub.ucsd.edu:6541"
 #SERVER_URL = "http://npclassifier.ucsd.edu:6541"
 
 def test_speed():
