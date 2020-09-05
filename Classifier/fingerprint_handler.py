@@ -41,20 +41,17 @@ def calculate_fingerprint(smiles, radi):
 
 
 def _isglycoside(smiles): #now it is expressed as boolean but can be changed to any format
-    sugar1 = Chem.MolFromSmarts('[OX2;$([r5]1@C@C@C(O)@C1),$([r6]1@C@C@C(O)@C(O)@C1)]')
+    #sugar1 = Chem.MolFromSmarts('[OX2;$([r5]1@C@C@C(O)@C1),$([r6]1@C@C@C(O)@C(O)@C1)]')
     sugar2 = Chem.MolFromSmarts('[OX2;$([r5]1@C(!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C1),$([r6]1@C(!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C@C1)]')
     sugar3 = Chem.MolFromSmarts('[OX2;$([r5]1@C(!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C(O)@C1),$([r6]1@C(!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C(O)@C(O)@C1)]')
     sugar4 = Chem.MolFromSmarts('[OX2;$([r5]1@C(!@[OX2H1])@C@C@C1),$([r6]1@C(!@[OX2H1])@C@C@C@C1)]')
-    sugar5 = Chem.MolFromSmarts('[OX2;$([r5]1@[C@@](!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C1),$([r6]1@[C@@](!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C@C1)]')
-    sugar6 = Chem.MolFromSmarts('[OX2;$([r5]1@[C@](!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C1),$([r6]1@[C@](!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C@C1)]')
+    #sugar5 = Chem.MolFromSmarts('[OX2;$([r5]1@[C@@](!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C1),$([r6]1@[C@@](!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C@C1)]')
+    #sugar6 = Chem.MolFromSmarts('[OX2;$([r5]1@[C@](!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C1),$([r6]1@[C@](!@[OX2,NX3,SX2,FX1,ClX1,BrX1,IX1])@C@C@C@C1)]')
     mol = Chem.MolFromSmiles(smiles)
     try:
-        if (mol.HasSubstructMatch(sugar1) or 
-            mol.HasSubstructMatch(sugar2) or
+        if (mol.HasSubstructMatch(sugar2) or
             mol.HasSubstructMatch(sugar3) or
-            mol.HasSubstructMatch(sugar4) or
-            mol.HasSubstructMatch(sugar5) or
-            mol.HasSubstructMatch(sugar6)) :
+            mol.HasSubstructMatch(sugar4)) :
             return True 
         else:
             return False 

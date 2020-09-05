@@ -6,4 +6,7 @@ C=C1CC[C@H](C/C=C(\C)CO[C@@H]2O[C@H](CO)[C@@H](O)[C@H](O)[C@H]2O)C(C)(C)[C@@H]1/
 , Carotenoids (C50), Carotenoids (C50, γ-γ)
 CCCCCCCCCCCCCCCC(=O)OCCCCCCCCCCCCCC, Fatty acids, Fatty esters, Wax monoesters
 CC/C=C\CC(=O)/C=C/C=C\C=C\C=C\[C@@H](O)[C@@H](O)C/C=C\CCC(=O)O, Fatty acids, Docosanoids, Resolvin Ds
-
+CC(=CCCC(C)(CCCC(C)(CCCC(C)(CCCC(C)(CCCC(C)(CCCC(C)(CCCC(C)(CCCC(C)(CCCC(C)(CCCC(C)(CCCC(=CCCC(C)(C=C)O)C)O)O)O)O)O)O)O)O)O)O)C, Terpenoids, Polyprenols, Polyprenol derivatives
+CC(=CCCC(=CCCC(=CCC(CCC(=CCCC(=CCO)C)C)C(=C)C)C)C)C, Terpenoid, Triterpenoids, Acyclic triterpenoids
+CO[C@@H]1[C@@H](CO)O[C@H](Oc2cc(C)cc(Oc3cc(C)cc(O)c3)c2)[C@H](O)[C@H]1O, Polyketides, Diphenyl ethers (DPEs), Fungal DPEs
+C1=CC(=C(C(=C1OC2=CC(=C(C=C2Br)Br)Br)Br)Br)Br, Shikimates and Phenylpropanoids, Diphenyl ethers (DPEs), Marine-bacterial DPEs
