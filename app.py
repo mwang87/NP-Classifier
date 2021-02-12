@@ -41,6 +41,8 @@ NAVBAR = dbc.Navbar(
             [
                 dbc.NavItem(dbc.NavLink("NP Classifier", href="#")),
                 dbc.NavItem(dbc.NavLink("Report Feedback", href="https://docs.google.com/forms/d/e/1FAIpQLSf1-sw-P0SQGokyeaOpEmLda0UPJW93qkrI8rfp7D46fHVi6g/viewform?usp=sf_link")),
+                dbc.NavItem(dbc.NavLink("Preprint Publication", href="https://chemrxiv.org/articles/preprint/NPClassifier_A_Deep_Neural_Network-Based_Structural_Classification_Tool_for_Natural_Products/12885494/1")),
+                dbc.NavItem(dbc.NavLink("API", href="https://ccms-ucsd.github.io/GNPSDocumentation/api/#structure-np-classifier")),
             ],
         navbar=True)
     ],
@@ -55,6 +57,7 @@ DASHBOARD = [
     dbc.CardBody(
         [
             html.Div(id='version', children="Version - 1.5"),
+            html.Br(),
             dbc.Textarea(className="mb-3", id='smiles_string', placeholder="Smiles Structure"),
             dcc.Loading(
                 id="structure",
