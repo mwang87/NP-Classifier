@@ -12,6 +12,8 @@ We pass through tensorflow serving at this url:
 
 ```/model/metadata```
 
+If the model input names change, then we need to change it in the code
+
 ### APIs
 
 Classify programmatically 

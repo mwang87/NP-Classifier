@@ -1,4 +1,7 @@
-wget --output-document=models.zip "https://www.dropbox.com/sh/9dl7c7uq7wvwzhy/AAAxBsZATdkQPml-RBJrX9qja?dl=1"
+rm CLASS SUPERCLASS PATHWAY -r
+rm *hdf5
+
+wget --output-document=models.zip "https://www.dropbox.com/sh/wkphar19b8ludjn/AAAdfdvw3-9HpG21YImlFRDua?dl=1"
 unzip models.zip
 mkdir -p CLASS/000001
 mkdir -p SUPERCLASS/000001
