@@ -125,7 +125,7 @@ def handle_smiles(smiles_string):
 
     if isglycoside:
         output_dict = {}
-        output_dict["type"] = "glycoside"
+        output_dict["type"] = "is glycoside"
         output_dict["entry"] = "glycoside"
         output_list.append(output_dict)
 
