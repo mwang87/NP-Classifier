@@ -12,3 +12,6 @@ CO[C@@H]1[C@@H](CO)O[C@H](Oc2cc(C)cc(Oc3cc(C)cc(O)c3)c2)[C@H](O)[C@H]1O, Polyket
 C1=CC(=C(C(=C1OC2=CC(=C(C=C2Br)Br)Br)Br)Br)Br, Shikimates and Phenylpropanoids, Diphenyl ethers (DPEs), Marine-bacterial DPEs
 C1=CC2=C(C(=C(C3=C2C4=C(O3)C(=C(C=C41)Br)O)O)O)CC5=CC(=C(C(=C5)Br)O)O, Shikimates and Phenylpropanoids, Phenanthrenoids, Phenanthrenes
 CC1=CC(=C(C(=C1)O)C(=O)C2=C(C=CC=C2O)C(=O)O)O, Polyketides, Aromatic polyketides, Benzophenones
+CC(C)=CCCC(C)=CCc1c(O)cc(O)c(C(=O)CC(C)C)c1O, Polyketides, Phloroglucinols, "Prenylated,geranylated phloroglucinols"
+CC1CC2OC(=O)C3=CCCC(C1(C)CCC1=CC(=O)OC1)C32C, Terpenoids, Diterpenoids, Colensane and Clerodane diterpenoids
+
