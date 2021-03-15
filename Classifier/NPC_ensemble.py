@@ -81,8 +81,8 @@ def classifier(smiles):
     pred_super = model_super.predict(fp)[0]
     pred_path = model_pathway.predict(fp)[0]        
 
-    n_class = list(np.where(pred_class>=0.1)[0])
-    n_super = list(np.where(pred_super>=0.3)[0])
+    n_class = list(np.where(pred_class>=0.5)[0])
+    n_super = list(np.where(pred_super>=0.5)[0])
     n_path = list(np.where(pred_path>=0.5)[0])
 
     if n_path == []:
