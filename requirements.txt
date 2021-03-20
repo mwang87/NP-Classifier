@@ -16,7 +16,7 @@ future==0.18.2
 gunicorn==20.0.4
 idna==2.8
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 libarchive-c==2.8
 MarkupSafe==1.1.1
 numpy==1.18.3
