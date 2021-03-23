@@ -236,12 +236,11 @@ def classify_structure(smiles):
 def classify():
     smiles_string = request.values.get("smiles")
 
-    if "cached" in request.values:
-        try:
-            db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
-            return db_record.classification_json
-        except:
-            pass
+    try:
+        db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
+        return db_record.classification_json
+    except:
+        pass
 
     isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
 
