@@ -23,6 +23,8 @@ import prediction_voting
 
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app.title = 'NP Classifier'
+
 server = app.server
 
 
@@ -68,6 +70,12 @@ DASHBOARD = [
                 id="classification_table",
                 children=[html.Div([html.Div(id="loading-output-3")])],
                 type="default",
+            ),
+            html.Hr(),
+            dcc.Loading(
+                id="usage_summary",
+                children=[html.Div([html.Div(id="loading-output-323")])],
+                type="default",
             )
         ]
     )
@@ -99,31 +107,32 @@ def display_page(pathname):
     [Input('smiles_string', 'value')],
 )
 def handle_smiles(smiles_string):
-    isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
+    classification_dict = _process_full_classification(smiles_string)
+    #isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
 
     output_list = []
 
-    for result in pathway_results:
+    for result in classification_dict["pathway_results"]:
         output_dict = {}
         output_dict["type"] = "pathway"
         output_dict["entry"] = result
         output_list.append(output_dict)
 
 
-    for result in superclass_results:
+    for result in classification_dict["superclass_results"]:
         output_dict = {}
         output_dict["type"] = "superclass"
         output_dict["entry"] = result
         output_list.append(output_dict)
 
 
-    for result in class_results:
+    for result in classification_dict["class_results"]:
         output_dict = {}
         output_dict["type"] = "class"
         output_dict["entry"] = result
         output_list.append(output_dict)
 
-    if isglycoside:
+    if classification_dict["isglycoside"]:
         output_dict = {}
         output_dict["type"] = "is glycoside"
         output_dict["entry"] = "glycoside"
@@ -152,6 +161,15 @@ def handle_smiles(smiles_string):
     img_obj = html.Img(id='image', src="https://gnps-structure.ucsd.edu/structureimg?smiles={}".format(urllib.parse.quote(smiles_string)))
 
     return [table_fig, img_obj]
+
+# This function will rerun at any 
+@app.callback(
+    [Output('usage_summary', 'children')],
+    [Input('url', 'pathname')],
+)
+def usage_summary(pathname):
+    number_entries = ClassifyEntity.select().count()
+    return ["Total Unique SMILES Classified - {}".format(number_entries)]
 
 
 def classify_structure(smiles):
@@ -232,13 +250,10 @@ def classify_structure(smiles):
     return isglycoside, class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
 
 
-@server.route("/classify")
-def classify():
-    smiles_string = request.values.get("smiles")
-
+def _process_full_classification(smiles_string):
     try:
         db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
-        return db_record.classification_json
+        return json.loads(db_record.classification_json)
     except:
         pass
 
@@ -262,6 +277,14 @@ def classify():
             )
     except:
         pass
+    
+    return respond_dict
+
+
+@server.route("/classify")
+def classify():
+    smiles_string = request.values.get("smiles")
+    respond_dict = _process_full_classification(smiles)
 
     return json.dumps(respond_dict)
 
