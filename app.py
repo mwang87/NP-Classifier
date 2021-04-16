@@ -284,7 +284,7 @@ def _process_full_classification(smiles_string):
 @server.route("/classify")
 def classify():
     smiles_string = request.values.get("smiles")
-    respond_dict = _process_full_classification(smiles)
+    respond_dict = _process_full_classification(smiles_string)
 
     return json.dumps(respond_dict)
 
