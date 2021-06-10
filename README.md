@@ -2,9 +2,18 @@
 
 ![production-integration](https://github.com/mwang87/NP-Classifier/workflows/production-integration/badge.svg)
 
-We typitcally will deploy this locally. To bring everything up
+We typically will deploy this locally. To bring everything up, 
+you need docker and docker-compose.
 
-```server-compose```
+If you didn't do it already, you will need a network.
+
+```shell
+docker network create nginx-net
+```
+
+```shell
+make server-compose
+```
 
 ### Checking Model Metadata
 

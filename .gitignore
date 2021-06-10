@@ -1,0 +1,10 @@
+venv
+.idea
+logs
+data
+Classifier/models_folder/models/CLASS
+Classifier/models_folder/models/PATHWAY
+Classifier/models_folder/models/SUPERCLASS
+Classifier/models_folder/models/*.hdf5
+Classifier/models_folder/models/models.zip
+Classifier/models_folder/models/models.config
