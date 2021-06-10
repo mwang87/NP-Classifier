@@ -19,8 +19,8 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 libarchive-c==2.8
 MarkupSafe==1.1.1
-numpy==1.18.3
-pandas==1.0.3
+numpy==1.19.3
+pandas==1.1.5
 plotly==4.6.0
 pycosat==0.6.3
 pycparser==2.19
@@ -30,8 +30,8 @@ python-dateutil==2.8.1
 pytz==2019.3
 requests==2.22.0
 retrying==1.3.3
-ruamel-yaml==0.15.46
-six==1.12.0
+ruamel-yaml==0.17.9
+six==1.15.0
 tqdm==4.32.1
 urllib3==1.24.2
 Werkzeug==1.0.1
