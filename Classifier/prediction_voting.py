@@ -1,101 +1,74 @@
-
-import itertools 
 import numpy as np
 
-def vote_classification(n_path, 
-                        n_class, 
-                        n_super, 
-                        pred_class, 
-                        pred_super, 
-                        path_from_class, 
-                        path_from_superclass, isglycoside, ontology_dictionary):
-    class_result = []
-    superclass_result = []
-    pathway_result = []
 
-    index = ontology_dictionary
-
-    index_class = list(index['Class'].keys())
-    index_superclass = list(index['Superclass'].keys())
-    index_pathway = list(index['Pathway'].keys())
-
-    path_for_vote = n_path+path_from_class+path_from_superclass
-    path = list(set([ k for k in path_for_vote if path_for_vote.count(k) ==3]))
-
-    if path == []:
-        path = list(set([ k for k in path_for_vote if path_for_vote.count(k) ==2]))
-        if len(path)>1:
-            path = list(set([ k for k in path_for_vote if path_for_vote.count(k) ==2])) 
-    if path == []:
-        for w in n_path:
-            pathway_result.append(index_pathway[w])
-        return pathway_result,superclass_result,class_result,isglycoside
+# TODO this can be vastly simplified again
 
 
-    else: #path != []
-        if set(n_path) & set(path) != set():
-            if set(path) & set(path_from_superclass) != set():
-                n_super = [ l for l in n_super if set(path)& set(index['Super_hierarchy'][str(l)]['Pathway']) != set()]
-                if n_super == []:
-                    n_class = [ m for m in n_class if set(path) & set(index['Class_hierarchy'][str(m)]['Pathway']) != set() ]
-                    n_super = [index['Class_hierarchy'][str(n)]['Superclass'] for n in n_class]
-                    n_super = list(set(itertools.chain.from_iterable(n_super)))
+def vote_classification(n_path, n_class, n_super,
+                        pred_class, pred_super,
+                        path_from_class, path_from_superclass,
+                        index):
+    """
+    Classify the obtained classes
 
-                elif len(n_super) > 1: #super != []
-                    n_class = [ u for u in n_class if set(path) & set(index['Class_hierarchy'][str(u)]['Pathway']) != set() ]
-                    if n_class != []:
-                        n_super = [index['Class_hierarchy'][str(v)]['Superclass'] for v in n_class]
-                        n_path = [index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class]
-                        n_path = list(set(itertools.chain.from_iterable(n_path)))
-                        n_super = list(set(itertools.chain.from_iterable(n_super)))
+    @param n_path: predicted pathways above noise
+    @param n_class: predicted classes above noise
+    @param n_super: predicted superclasses above noise
+    @param pred_class: predicted classes (all)
+    @param pred_super: predicted superclasses (all)
+    @param path_from_class: pathways extracted from classes
+    @param path_from_superclass: pathways extracted from superclasses
+    @param index: the "ontology"
+    @return: pathway_result, superclass_result, class_result => the classified results ids
+    """
 
-                    elif len(path)==1:
-                        n_super = [np.argmax(pred_super)]
-                        n_class = [ m for m in [np.argmax(pred_class)] if set(n_super) & set(index['Class_hierarchy'][str(m)]['Superclass']) != set() ]
+    pathways_for_vote = list(n_path) + list(path_from_class) + list(path_from_superclass)
 
+    # Select pathways with at least 3 counts
 
-                else:
-                    n_class = [ o for o in n_class if set(n_super) & set(index['Class_hierarchy'][str(o)]['Superclass'])!=set() ]
-                    if n_class == []:
-                        n_class = [ m for m in [np.argmax(pred_class)] if set(n_super) & set(index['Class_hierarchy'][str(m)]['Superclass']) != set() ]
-            else:
-                n_class = [ p for p in n_class if  set(path) & set(index['Class_hierarchy'][str(p)]['Pathway']) !=set() ]
-                n_super = [index['Class_hierarchy'][str(q)]['Superclass'] for q in n_class]
+    path = {k for k in pathways_for_vote if pathways_for_vote.count(k) == 3}
 
-                n_super = list(set(itertools.chain.from_iterable(n_super)))
+    if not path:  # if path is empty, we select pathways with only 2 counts
+        path = {k for k in pathways_for_vote if pathways_for_vote.count(k) == 2}
+
+    if not path:  # if path is still empty
+        # Add all the pathways we already know about, the rest is empty
+        return n_path, [], []
+
+    if path & set(n_path):  # we have at least some of n_path in our path
+        if path & set(path_from_superclass):  # we have at least some of the path from superclass in path
+            n_super = [i for i in n_super if path & set(index['Super_hierarchy'][str(i)]['Pathway'])]
+            n_class = [i for i in n_class if path & set(index['Class_hierarchy'][str(i)]['Pathway'])]
+
+            if not n_super:  # n_super is empty
+                n_super = list({index['Class_hierarchy'][str(n)]['Superclass'] for n in n_class})
+
+            elif len(n_super) > 1:  # super != []
+                if n_class:  # n_class is not empty
+                    n_super = list({j for i in n_class for j in index['Class_hierarchy'][str(i)]['Superclass']})
+                    n_path = list({j for i in n_class for j in index['Class_hierarchy'][str(i)]['Pathway']})
+                elif len(path) == 1:
+                    n_super = [np.argmax(pred_super)]
+                    best_candidate_class_index = np.argmax(pred_class)
+                    if set(n_super) & set(index['Class_hierarchy'][str(best_candidate_class_index)]['Superclass']):
+                        n_class = [best_candidate_class_index]
+
+            else:  # we have only one n_super
+                # now our classes are only the classes from our best superclass
+                n_class = [i for i in n_class if set(n_super) & set(index['Class_hierarchy'][str(i)]['Superclass'])]
+                if not n_class:  # n_class is empty, we take the predicted class with the highest score
+                    best_candidate_class_index = np.argmax(pred_class)
+                    if set(n_super) & set(index['Class_hierarchy'][str(best_candidate_class_index)]['Superclass']):
+                        n_class = [best_candidate_class_index]
 
         else:
-            n_super = [ l for l in n_super if set(path) & set(index['Super_hierarchy'][str(l)]['Pathway']) != set()]
-            if n_super == []:
-                n_class = [ m for m in n_class if set(path) & set(index['Class_hierarchy'][str(m)]['Pathway']) != set()]
-                n_super = [index['Class_hierarchy'][str(n)]['Superclass'] for n in n_class]
-                n_path = [index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class]
-                n_path = list(set(itertools.chain.from_iterable(n_path)))
-                n_super = list(set(itertools.chain.from_iterable(n_super)))
+            n_class = [p for p in n_class if path & set(index['Class_hierarchy'][str(p)]['Pathway'])]
+            n_super = list({index['Class_hierarchy'][str(q)]['Superclass'] for q in n_class})
 
+    else:
+        # Select all the classes that are part of our selected pathways
+        n_class = [m for m in n_class if set(path) & set(index['Class_hierarchy'][str(m)]['Pathway'])]
+        n_super = list({index['Class_hierarchy'][str(n)]['Superclass'] for n in n_class})
+        n_path = list({index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class})
 
-            elif len(n_super) > 1: #super != []
-                n_class = [ u for u in n_class if set(path) & set(index['Class_hierarchy'][str(u)]['Pathway']) != set()]
-                n_super = [index['Class_hierarchy'][str(v)]['Superclass'] for v in n_class]
-                n_path = [index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class]
-                n_path = list(set(itertools.chain.from_iterable(n_path)))
-                n_super = list(set(itertools.chain.from_iterable(n_super)))
-
-
-            else:
-                n_class = [ o for o in n_class if set(path) & set(index['Class_hierarchy'][str(o)]['Pathway']) != set() ]
-                n_super = [index['Class_hierarchy'][str(v)]['Superclass'] for v in n_class]
-                n_path = [index['Class_hierarchy'][str(v)]['Pathway'] for v in n_class]
-                n_path = list(set(itertools.chain.from_iterable(n_path)))
-                n_super = list(set(itertools.chain.from_iterable(n_super)))
-
-    for r in path:
-        pathway_result.append(index_pathway[r])
-    for s in n_super:
-        superclass_result.append(index_superclass[s])
-    for t in n_class:
-        class_result.append(index_class[t])
-    
-    return pathway_result,superclass_result,class_result,isglycoside #three class results and glycoside checker result (True/False)
-    
-
+    return path, n_super, n_class  # We have to check if we want path or n_path here!
