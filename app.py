@@ -4,32 +4,21 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import dash_table
-import plotly.express as px
 from dash.dependencies import Input, Output
-import os
-from zipfile import ZipFile
 import urllib.parse
 from flask import Flask, request
 import json
-import pandas as pd
 import requests
-import numpy as np
 import urllib.parse
 
-import sys
-sys.path.insert(0, "Classifier")
-import fingerprint_handler
-import prediction_voting
+from classification import classify_structure
+from models import ClassifyEntity
 
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = 'NP Classifier'
 
 server = app.server
-
-
-from models import ClassifyEntity
-
 
 ontology_dictionary = json.loads(open("Classifier/dict/index_v1.json").read())
 
@@ -42,11 +31,14 @@ NAVBAR = dbc.Navbar(
         dbc.Nav(
             [
                 dbc.NavItem(dbc.NavLink("NP Classifier", href="#")),
-                dbc.NavItem(dbc.NavLink("Report Feedback", href="https://docs.google.com/forms/d/e/1FAIpQLSf1-sw-P0SQGokyeaOpEmLda0UPJW93qkrI8rfp7D46fHVi6g/viewform?usp=sf_link")),
-                dbc.NavItem(dbc.NavLink("Preprint Publication", href="https://chemrxiv.org/articles/preprint/NPClassifier_A_Deep_Neural_Network-Based_Structural_Classification_Tool_for_Natural_Products/12885494/1")),
-                dbc.NavItem(dbc.NavLink("API", href="https://ccms-ucsd.github.io/GNPSDocumentation/api/#structure-np-classifier")),
+                dbc.NavItem(dbc.NavLink("Report Feedback",
+                                        href="https://docs.google.com/forms/d/e/1FAIpQLSf1-sw-P0SQGokyeaOpEmLda0UPJW93qkrI8rfp7D46fHVi6g/viewform?usp=sf_link")),
+                dbc.NavItem(dbc.NavLink("Preprint Publication",
+                                        href="https://chemrxiv.org/articles/preprint/NPClassifier_A_Deep_Neural_Network-Based_Structural_Classification_Tool_for_Natural_Products/12885494/1")),
+                dbc.NavItem(dbc.NavLink("API",
+                                        href="https://ccms-ucsd.github.io/GNPSDocumentation/api/#structure-np-classifier")),
             ],
-        navbar=True)
+            navbar=True)
     ],
     color="light",
     dark=False,
@@ -83,7 +75,7 @@ DASHBOARD = [
 
 BODY = dbc.Container(
     [
-        dbc.Row([dbc.Col(dbc.Card(DASHBOARD)),], style={"marginTop": 30}),
+        dbc.Row([dbc.Col(dbc.Card(DASHBOARD)), ], style={"marginTop": 30}),
     ],
     className="mt-12",
 )
@@ -101,44 +93,34 @@ def display_page(pathname):
     else:
         return "CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O"
 
-# This function will rerun at any 
+
+# This function will rerun at any
 @app.callback(
     [Output('classification_table', 'children'), Output('structure', 'children')],
     [Input('smiles_string', 'value')],
 )
 def handle_smiles(smiles_string):
     classification_dict = _process_full_classification(smiles_string)
-    #isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
 
     output_list = []
 
     for result in classification_dict["pathway_results"]:
-        output_dict = {}
-        output_dict["type"] = "pathway"
-        output_dict["entry"] = result
+        output_dict = {"type": "pathway", "entry": result}
         output_list.append(output_dict)
-
 
     for result in classification_dict["superclass_results"]:
-        output_dict = {}
-        output_dict["type"] = "superclass"
-        output_dict["entry"] = result
+        output_dict = {"type": "superclass", "entry": result}
         output_list.append(output_dict)
 
-
     for result in classification_dict["class_results"]:
-        output_dict = {}
-        output_dict["type"] = "class"
-        output_dict["entry"] = result
+        output_dict = {"type": "class", "entry": result}
         output_list.append(output_dict)
 
     if classification_dict["isglycoside"]:
-        output_dict = {}
-        output_dict["type"] = "is glycoside"
-        output_dict["entry"] = "glycoside"
+        output_dict = {"type": "is glycoside", "entry": "glycoside"}
         output_list.append(output_dict)
 
-    #Creating Table
+    # Creating Table
     white_list_columns = ["type", "entry"]
     table_fig = dash_table.DataTable(
         columns=[
@@ -153,16 +135,18 @@ def handle_smiles(smiles_string):
         selected_columns=[],
         selected_rows=[],
         page_action="native",
-        page_current= 0,
-        page_size= 10,
+        page_current=0,
+        page_size=10,
     )
 
     # Creating Structure Image
-    img_obj = html.Img(id='image', src="https://gnps-structure.ucsd.edu/structureimg?smiles={}".format(urllib.parse.quote(smiles_string)))
+    img_obj = html.Img(id='image', src="https://gnps-structure.ucsd.edu/structureimg?smiles={}".format(
+        urllib.parse.quote(smiles_string)))
 
     return [table_fig, img_obj]
 
-# This function will rerun at any 
+
+# This function will rerun at any
 @app.callback(
     [Output('usage_summary', 'children')],
     [Input('url', 'pathname')],
@@ -172,84 +156,6 @@ def usage_summary(pathname):
     return ["Total Unique SMILES Classified - {}".format(number_entries)]
 
 
-def classify_structure(smiles):
-    isglycoside = fingerprint_handler._isglycoside(smiles)
-
-    fp = fingerprint_handler.calculate_fingerprint(smiles, 2)
-
-    fp1 = fp[0].tolist()[0]
-    fp2 = fp[1].tolist()[0]
-
-    query_dict = {}
-    query_dict["input_3"] = fp1
-    query_dict["input_4"] = fp2
-
-    # Handling SUPERCLASS
-    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/SUPERCLASS:predict"
-    payload = json.dumps({"instances": [ query_dict ]})
-
-    headers = {"content-type": "application/json"}
-    json_response = requests.post(fp_pred_url, data=payload, headers=headers)
-
-    pred_super = np.asarray(json.loads(json_response.text)['predictions'])[0]
-    n_super = list(np.where(pred_super>=0.3)[0])
-
-    path_from_superclass = []
-    for j in n_super:
-        path_from_superclass += ontology_dictionary['Super_hierarchy'][str(j)]['Pathway']
-    path_from_superclass = list(set(path_from_superclass))
-
-    query_dict = {}
-    query_dict["input_3"] = fp1
-    query_dict["input_4"] = fp2
-
-    # Handling CLASS
-    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/CLASS:predict"
-    payload = json.dumps({"instances": [ query_dict ]})
-
-    headers = {"content-type": "application/json"}
-    json_response = requests.post(fp_pred_url, data=payload, headers=headers)
-
-    pred_class = np.asarray(json.loads(json_response.text)['predictions'])[0]
-    n_class = list(np.where(pred_class>=0.1)[0])
-
-    path_from_class = []
-    for j in n_class:
-        path_from_class += ontology_dictionary['Class_hierarchy'][str(j)]['Pathway']
-    path_from_class = list(set(path_from_class))
-
-    query_dict = {}
-    query_dict["input_1"] = fp1
-    query_dict["input_2"] = fp2
-
-    # Handling PATHWAY
-    fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/PATHWAY:predict"
-    payload = json.dumps({"instances": [ query_dict ]})
-
-    headers = {"content-type": "application/json"}
-    json_response = requests.post(fp_pred_url, data=payload, headers=headers)
-
-    pred_path = np.asarray(json.loads(json_response.text)['predictions'])[0]
-    n_path = list(np.where(pred_path>=0.5)[0])
-
-    class_result = []
-    superclass_result = []
-    pathway_result = []
-
-    # Voting on Answer
-    pathway_result, superclass_result, class_result, isglycoside = prediction_voting.vote_classification(n_path, 
-                                                                                                        n_class, 
-                                                                                                        n_super, 
-                                                                                                        pred_class,
-                                                                                                        pred_super, 
-                                                                                                        path_from_class, 
-                                                                                                        path_from_superclass, 
-                                                                                                        isglycoside, 
-                                                                                                        ontology_dictionary)
-    
-    return isglycoside, class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
-
-
 def _process_full_classification(smiles_string):
     try:
         db_record = ClassifyEntity.get(ClassifyEntity.smiles == smiles_string)
@@ -257,27 +163,29 @@ def _process_full_classification(smiles_string):
     except:
         pass
 
-    isglycoside, class_results, superclass_results, pathway_results, path_from_class, path_from_superclass, n_path, fp1, fp2 = classify_structure(smiles_string)
+    class_result, superclass_result, pathway_result, fp1, fp2, isglycoside = classify_structure(smiles_string, ontology_dictionary)
 
-    respond_dict = {}
-    respond_dict["class_results"] = class_results
-    respond_dict["superclass_results"] = superclass_results
-    respond_dict["pathway_results"] = pathway_results
-    respond_dict["isglycoside"] = isglycoside
-    
-    respond_dict["fp1"] = fp1
-    respond_dict["fp2"] = fp2
+    # Next version of the API response could just output *_result directly
+
+    respond_dict = {"class_results": list(class_result.values()),
+                    "superclass_results": list(superclass_result.values()),
+                    "pathway_results": list(pathway_result.values()),
+                    "class_results_ids": [int(i) for i in class_result.keys()],
+                    "superclass_results_ids": [int(i) for i in superclass_result.keys()],
+                    "pathway_results_ids": [int(i) for i in pathway_result.keys()],
+                    "isglycoside": isglycoside,
+                    "fp1": fp1, "fp2": fp2}
 
     # Lets save the result here, we should also check if its changed, and if so, we overwrite
     try:
         # Save it out
         ClassifyEntity.create(
-                smiles=smiles_string,
-                classification_json=json.dumps(respond_dict)
-            )
+            smiles=smiles_string,
+            classification_json=json.dumps(respond_dict)
+        )
     except:
         pass
-    
+
     return respond_dict
 
 
@@ -288,6 +196,7 @@ def classify():
 
     return json.dumps(respond_dict)
 
+
 # This gets you the model metadata
 @server.route("/model/metadata")
 def metadata():
@@ -295,13 +204,15 @@ def metadata():
     all_metadata = {}
     pathway_metadata = json.loads(requests.get("http://npclassifier-tf-server:8501/v1/models/PATHWAY/metadata").text)
     class_metadata = json.loads(requests.get("http://npclassifier-tf-server:8501/v1/models/CLASS/metadata").text)
-    superclass_metadata = json.loads(requests.get("http://npclassifier-tf-server:8501/v1/models/SUPERCLASS/metadata").text)
+    superclass_metadata = json.loads(
+        requests.get("http://npclassifier-tf-server:8501/v1/models/SUPERCLASS/metadata").text)
 
     all_metadata["pathway"] = pathway_metadata
     all_metadata["class"] = class_metadata
     all_metadata["superclass"] = superclass_metadata
 
     return json.dumps(all_metadata)
+
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")
