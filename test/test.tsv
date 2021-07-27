@@ -13,3 +13,4 @@ C1=CC(=C(C(=C1OC2=CC(=C(C=C2Br)Br)Br)Br)Br)Br, Shikimates and Phenylpropanoids, 
 C1=CC2=C(C(=C(C3=C2C4=C(O3)C(=C(C=C41)Br)O)O)O)CC5=CC(=C(C(=C5)Br)O)O, Shikimates and Phenylpropanoids, Phenanthrenoids, Phenanthrenes
 CC1=CC(=C(C(=C1)O)C(=O)C2=C(C=CC=C2O)C(=O)O)O, Polyketides, Aromatic polyketides, Benzophenones
 C1=CC=C2C(=C1)C(=CN2)C[C@@H](C(=O)O)N,Amino acids and Peptides;Shikimates and Phenylpropanoids, Small peptides, Aminoacids
+CCC(C)C1C2=NC(C(O2)C)C(=O)NC(C3=NC(=CS3)C(=O)NC(C4=NC(C(O4)C)C(=O)NC(C5=NC(=CS5)C(=O)N1)C)CC(C)C)CC6=CC=CC=C6, Amino acids and Peptides, Oligopeptides, Cyclic peptides
