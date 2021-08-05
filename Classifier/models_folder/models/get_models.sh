@@ -1,7 +1,7 @@
 rm CLASS SUPERCLASS PATHWAY -r
 rm *hdf5
 
-wget --output-document=models.zip "https://www.dropbox.com/sh/wkphar19b8ludjn/AAAdfdvw3-9HpG21YImlFRDua?dl=1"
+wget --output-document=models.zip "https://zenodo.org/record/5068687/files/model.zip?download=1"
 unzip models.zip
 mkdir -p CLASS/000001
 mkdir -p SUPERCLASS/000001
