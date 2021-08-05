@@ -23,6 +23,10 @@ We pass through tensorflow serving at this url:
 
 If the model input names change, then we need to change it in the code
 
+### Checking input/output layer names.
+Input layers' names should be "input_2048" and "input_4096"
+Output layer's name should be "output"
+
 ### APIs
 
 Classify programmatically 
