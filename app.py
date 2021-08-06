@@ -181,8 +181,8 @@ def classify_structure(smiles):
     fp2 = fp[1].tolist()[0]
 
     query_dict = {}
-    query_dict["input_3"] = fp1
-    query_dict["input_4"] = fp2
+    query_dict["input_2048"] = fp1
+    query_dict["input_4096"] = fp2
 
     # Handling SUPERCLASS
     fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/SUPERCLASS:predict"
@@ -200,8 +200,8 @@ def classify_structure(smiles):
     path_from_superclass = list(set(path_from_superclass))
 
     query_dict = {}
-    query_dict["input_3"] = fp1
-    query_dict["input_4"] = fp2
+    query_dict["input_2048"] = fp1
+    query_dict["input_4096"] = fp2
 
     # Handling CLASS
     fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/CLASS:predict"
@@ -219,8 +219,8 @@ def classify_structure(smiles):
     path_from_class = list(set(path_from_class))
 
     query_dict = {}
-    query_dict["input_1"] = fp1
-    query_dict["input_2"] = fp2
+    query_dict["input_2048"] = fp1
+    query_dict["input_4096"] = fp2
 
     # Handling PATHWAY
     fp_pred_url = "http://npclassifier-tf-server:8501/v1/models/PATHWAY:predict"
