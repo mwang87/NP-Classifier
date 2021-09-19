@@ -101,7 +101,7 @@ def display_page(pathname):
     else:
         return "CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O"
 
-# This function will rerun at any 
+# This function will rerun at any
 @app.callback(
     [Output('classification_table', 'children'), Output('structure', 'children')],
     [Input('smiles_string', 'value')],
@@ -162,7 +162,7 @@ def handle_smiles(smiles_string):
 
     return [table_fig, img_obj]
 
-# This function will rerun at any 
+# This function will rerun at any
 @app.callback(
     [Output('usage_summary', 'children')],
     [Input('url', 'pathname')],
@@ -237,16 +237,16 @@ def classify_structure(smiles):
     pathway_result = []
 
     # Voting on Answer
-    pathway_result, superclass_result, class_result, isglycoside = prediction_voting.vote_classification(n_path, 
-                                                                                                        n_class, 
-                                                                                                        n_super, 
+    pathway_result, superclass_result, class_result, isglycoside = prediction_voting.vote_classification(n_path,
+                                                                                                        n_class,
+                                                                                                        n_super,
                                                                                                         pred_class,
-                                                                                                        pred_super, 
-                                                                                                        path_from_class, 
-                                                                                                        path_from_superclass, 
-                                                                                                        isglycoside, 
+                                                                                                        pred_super,
+                                                                                                        path_from_class,
+                                                                                                        path_from_superclass,
+                                                                                                        isglycoside,
                                                                                                         ontology_dictionary)
-    
+
     return isglycoside, class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
 
 
@@ -264,7 +264,7 @@ def _process_full_classification(smiles_string):
     respond_dict["superclass_results"] = superclass_results
     respond_dict["pathway_results"] = pathway_results
     respond_dict["isglycoside"] = isglycoside
-    
+
     respond_dict["fp1"] = fp1
     respond_dict["fp2"] = fp2
 
@@ -277,7 +277,7 @@ def _process_full_classification(smiles_string):
             )
     except:
         pass
-    
+
     return respond_dict
 
 
@@ -302,6 +302,12 @@ def metadata():
     all_metadata["superclass"] = superclass_metadata
 
     return json.dumps(all_metadata)
+
+@server.route("/dict")
+def dict():
+    """Serve the dictionary"""
+    return ontology_dictionary
+
 
 if __name__ == "__main__":
     app.run_server(debug=True, port=5000, host="0.0.0.0")
