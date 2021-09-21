@@ -86,4 +86,7 @@ X_val, Y_val = data_generation(val_dict,dataset)
 
 model = Model()
 
-model.fit(x=X_train, y=Y_train, batch_size=128, epochs=100, verbose=2, validation_split=0.0, validation_data=(X_val,Y_val), shuffle=True, class_weight=None, sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None, validation_freq=1, max_queue_size=10, workers=1, use_multiprocessing=False)
+#Avoiding overfitting
+early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
+
+model.fit(x=X_train, y=Y_train, batch_size=128, epochs=100, verbose=2,callbacks=[early_stop], validation_split=0.0, validation_data=(X_val,Y_val), shuffle=True, class_weight=None, sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None, validation_freq=1, max_queue_size=10, workers=1, use_multiprocessing=False)
