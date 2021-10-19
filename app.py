@@ -81,9 +81,27 @@ DASHBOARD = [
     )
 ]
 
+CONTRIBUTORS_DASHBOARD = [
+    dbc.CardHeader(html.H5("Software Contributors")),
+    dbc.CardBody(
+        [
+            "Hyunwoo Kim PhD - UC San Diego",
+            html.Br(),
+            "Mingxun Wang PhD - UC San Diego",
+            html.Br(),
+            html.Br(),
+            html.H5("Citation"),
+            html.A('Kim HW, Wang M, Leber CA, Nothias LF, Reher R, Kang KB, van der Hooft JJJ, Dorrestein PC, Gerwick WH, Cottrell GW. NPClassifier: A Deep Neural Network-Based Structural Classification Tool for Natural Products. J Nat Prod. 2021 Oct 18. doi: 10.1021/acs.jnatprod.1c00399. Epub ahead of print. PMID: 34662515.', 
+                    href="https://pubmed.ncbi.nlm.nih.gov/34662515/")
+        ]
+    )
+]
+
 BODY = dbc.Container(
     [
         dbc.Row([dbc.Col(dbc.Card(DASHBOARD)),], style={"marginTop": 30}),
+        html.Br(),
+        dbc.Row([dbc.Col(dbc.Card(CONTRIBUTORS_DASHBOARD)),]),
     ],
     className="mt-12",
 )
