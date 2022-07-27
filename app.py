@@ -45,6 +45,7 @@ NAVBAR = dbc.Navbar(
                 dbc.NavItem(dbc.NavLink("Report Feedback", href="https://docs.google.com/forms/d/e/1FAIpQLSf1-sw-P0SQGokyeaOpEmLda0UPJW93qkrI8rfp7D46fHVi6g/viewform?usp=sf_link")),
                 dbc.NavItem(dbc.NavLink("Preprint Publication", href="https://chemrxiv.org/articles/preprint/NPClassifier_A_Deep_Neural_Network-Based_Structural_Classification_Tool_for_Natural_Products/12885494/1")),
                 dbc.NavItem(dbc.NavLink("API", href="https://ccms-ucsd.github.io/GNPSDocumentation/api/#structure-np-classifier")),
+                dbc.NavItem(dbc.NavLink("Source code", href="https://github.com/mwang87/NP-Classifier"))
             ],
         navbar=True)
     ],
@@ -119,7 +120,7 @@ def display_page(pathname):
     else:
         return "CC1C(O)CC2C1C(OC1OC(COC(C)=O)C(O)C(O)C1O)OC=C2C(O)=O"
 
-# This function will rerun at any 
+# This function will rerun at any
 @app.callback(
     [Output('classification_table', 'children'), Output('structure', 'children')],
     [Input('smiles_string', 'value')],
@@ -180,7 +181,7 @@ def handle_smiles(smiles_string):
 
     return [table_fig, img_obj]
 
-# This function will rerun at any 
+# This function will rerun at any
 @app.callback(
     [Output('usage_summary', 'children')],
     [Input('url', 'pathname')],
@@ -255,16 +256,16 @@ def classify_structure(smiles):
     pathway_result = []
 
     # Voting on Answer
-    pathway_result, superclass_result, class_result, isglycoside = prediction_voting.vote_classification(n_path, 
-                                                                                                        n_class, 
-                                                                                                        n_super, 
+    pathway_result, superclass_result, class_result, isglycoside = prediction_voting.vote_classification(n_path,
+                                                                                                        n_class,
+                                                                                                        n_super,
                                                                                                         pred_class,
-                                                                                                        pred_super, 
-                                                                                                        path_from_class, 
-                                                                                                        path_from_superclass, 
-                                                                                                        isglycoside, 
+                                                                                                        pred_super,
+                                                                                                        path_from_class,
+                                                                                                        path_from_superclass,
+                                                                                                        isglycoside,
                                                                                                         ontology_dictionary)
-    
+
     return isglycoside, class_result, superclass_result, pathway_result, path_from_class, path_from_superclass, n_path, fp1, fp2
 
 
@@ -282,7 +283,7 @@ def _process_full_classification(smiles_string):
     respond_dict["superclass_results"] = superclass_results
     respond_dict["pathway_results"] = pathway_results
     respond_dict["isglycoside"] = isglycoside
-    
+
     respond_dict["fp1"] = fp1
     respond_dict["fp2"] = fp2
 
@@ -295,7 +296,7 @@ def _process_full_classification(smiles_string):
             )
     except:
         pass
-    
+
     return respond_dict
 
 
