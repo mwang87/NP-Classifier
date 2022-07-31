@@ -283,8 +283,9 @@ def _process_full_classification(smiles_string):
     respond_dict["pathway_results"] = pathway_results
     respond_dict["isglycoside"] = isglycoside
     
-    respond_dict["fp1"] = fp1
-    respond_dict["fp2"] = fp2
+    # Not including this extra information to slim down the caching database
+    #respond_dict["fp1"] = fp1
+    #respond_dict["fp2"] = fp2
 
     # Lets save the result here, we should also check if its changed, and if so, we overwrite
     try:
