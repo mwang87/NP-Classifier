@@ -5,6 +5,18 @@
 We typically will deploy this locally. To bring everything up, 
 you need docker and docker-compose.
 
+### Local Server
+
+#### Downloading NP Classifier Models
+
+```
+cd Classifier/models_folder/models
+sh ./get_models.sh
+```
+NOTE: Make sure you have python installed and tensorflow version 2.3.0 installed to convert the keras models into HDF5 TF2 models.  
+
+#### Building Dockerized Server
+
 If you didn't do it already, you will need a network.
 
 ```shell
