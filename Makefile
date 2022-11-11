@@ -15,5 +15,9 @@ server-compose:
 	docker-compose build
 	docker-compose up -d
 
+server-compose-production:
+	docker-compose build
+	docker-compose up -d
+
 attach:
 	docker exec -i -t npclassifier-dash /bin/bash
