@@ -87,12 +87,16 @@ CONTRIBUTORS_DASHBOARD = [
         [
             "Hyunwoo Kim PhD - UC San Diego",
             html.Br(),
-            "Mingxun Wang PhD - UC San Diego",
+            "Mingxun Wang PhD - UC Riverside",
             html.Br(),
             html.Br(),
             html.H5("Citation"),
             html.A('Kim HW, Wang M, Leber CA, Nothias LF, Reher R, Kang KB, van der Hooft JJJ, Dorrestein PC, Gerwick WH, Cottrell GW. NPClassifier: A Deep Neural Network-Based Structural Classification Tool for Natural Products. J Nat Prod. 2021 Oct 18. doi: 10.1021/acs.jnatprod.1c00399. Epub ahead of print. PMID: 34662515.', 
                     href="https://pubmed.ncbi.nlm.nih.gov/34662515/")
+            html.Br(),
+            html.Br(),
+            html.A('Checkout our other work!', 
+                    href="https://www.cs.ucr.edu/~mingxunw/")
         ]
     )
 ]
