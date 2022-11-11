@@ -15,9 +15,9 @@ services:
       - default
       - nginx-net
     environment:
-      VIRTUAL_HOST: npclassifier.ucsd.edu
+      VIRTUAL_HOST: npclassifier.ucsd.edu,npclassifier.gnps2.org
       VIRTUAL_PORT: 6541
-      LETSENCRYPT_HOST: npclassifier.ucsd.edu
+      LETSENCRYPT_HOST: npclassifier.ucsd.edu,npclassifier.gnps2.org
       LETSENCRYPT_EMAIL: miw023@ucsd.edu
     restart: on-failure
     command: /app/run_server.sh
