@@ -16,11 +16,15 @@ services:
       - nginx-net
     environment:
       VIRTUAL_HOST: npclassifier.ucsd.edu,npclassifier.gnps2.org
-      VIRTUAL_PORT: 6541
+      VIRTUAL_PORT: 5000
       LETSENCRYPT_HOST: npclassifier.ucsd.edu,npclassifier.gnps2.org
       LETSENCRYPT_EMAIL: miw023@ucsd.edu
     restart: on-failure
     command: /app/run_server.sh
+    deploy:
+      resources:
+        limits:
+          memory: 16000M
   
   npclassifier-tf-server:
     image: tensorflow/serving:2.3.0
@@ -31,6 +35,10 @@ services:
     networks:
       - default
     command: --model_config_file=/models/models.config
+    deploy:
+      resources:
+        limits:
+          memory: 16000M
 
 networks:
   nginx-net:

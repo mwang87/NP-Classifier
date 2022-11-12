@@ -5,19 +5,19 @@ bash:
 	docker run -it --rm npclassifier /bin/bash
 
 server-compose-build-nocache:
-	docker-compose build --no-cache
+	docker-compose --compatibility build --no-cache
 
 server-compose-interactive:
-	docker-compose build
-	docker-compose up
+	docker-compose --compatibility build
+	docker-compose --compatibility up
 
 server-compose:
-	docker-compose build
-	docker-compose up -d
+	docker-compose --compatibility build
+	docker-compose --compatibility up -d
 
 server-compose-production:
-	docker-compose build
-	docker-compose up -d
+	docker-compose --compatibility build
+	docker-compose --compatibility up -d
 
 attach:
 	docker exec -i -t npclassifier-dash /bin/bash
