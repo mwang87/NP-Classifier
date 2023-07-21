@@ -6,8 +6,8 @@ import grequests
 import time
 
 #SERVER_URL = "http://localhost:6541"
-SERVER_URL = "http://dorresteintesthub.ucsd.edu:6541"
-#SERVER_URL = "http://npclassifier.ucsd.edu:6541"
+#SERVER_URL = "http://dorresteintesthub.ucsd.edu:6541"
+SERVER_URL = "http://npclassifier.gnps2.org"
 
 def test_speed():
     df = pd.read_csv("test.tsv", sep=",")
