@@ -3,7 +3,7 @@ import urllib.parse
 import requests
 
 
-SERVER_URL = "https://npclassifier.ucsd.edu/"
+SERVER_URL = "https://npclassifier.gnps2.org/"
 #SERVER_URL = "http://mingwangbeta.ucsd.edu:6541"
 
 def test_heartbeat():
