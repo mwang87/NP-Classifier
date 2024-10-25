@@ -1,8 +1,8 @@
 build:
-	docker build -t npclassifier . 
+	docker build --platform linux/amd64 -t npclassifier . --no-cache
 
 bash:
-	docker run -it --rm npclassifier /bin/bash
+	docker run --platform=linux/amd64 -it --rm npclassifier /bin/bash
 
 server-compose-build-nocache:
 	docker-compose --compatibility build --no-cache
