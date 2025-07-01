@@ -23,6 +23,11 @@ services:
       LETSENCRYPT_EMAIL: mwang87@gmail.com
     restart: on-failure
     command: /app/run_server.sh
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"      # Maximum size of a single log file
+        max-file: "3"        # Maximum number of log files to keep (rotates after 3 files)
     deploy:
       resources:
         limits:
@@ -37,6 +42,11 @@ services:
     networks:
       - default
     command: --model_config_file=/models/models.config
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"      # Maximum size of a single log file
+        max-file: "3"        # Maximum number of log files to keep (rotates after 3 files)
     deploy:
       resources:
         limits:
