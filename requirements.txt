@@ -34,5 +34,5 @@ ruamel-yaml==0.17.9
 six==1.15.0
 tqdm==4.32.1
 urllib3==1.24.2
-Werkzeug==1.0.1
+Werkzeug==2.2.3
 peewee
